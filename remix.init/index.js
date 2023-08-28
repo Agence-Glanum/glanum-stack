@@ -3,7 +3,6 @@ const crypto = require("crypto");
 const fs = require("fs/promises");
 const path = require("path");
 
-const toml = require("@iarna/toml");
 const PackageJson = require("@npmcli/package-json");
 const semver = require("semver");
 const YAML = require("yaml");
@@ -14,12 +13,6 @@ const cleanupCypressFiles = ({ fileEntries, isTypeScript, packageManager }) =>
       new RegExp("npx ts-node", "g"),
       isTypeScript ? `${packageManager.exec} ts-node` : "node",
     );
-
-    if (!isTypeScript) {
-      newContent = newContent
-        .replace(new RegExp("create-user.ts", "g"), "create-user.js")
-        .replace(new RegExp("delete-user.ts", "g"), "delete-user.js");
-    }
 
     return [fs.writeFile(filePath, newContent)];
   });
@@ -100,7 +93,6 @@ const removeUnusedDependencies = (dependencies, unusedDependencies) =>
 const updatePackageJson = ({ APP_NAME, isTypeScript, packageJson }) => {
   const {
     devDependencies,
-    prisma: { seed: prismaSeed, ...prisma },
     scripts: {
       "format:repo": _repoFormatScript,
       "lint:repo": _repoLintScript,
@@ -119,14 +111,6 @@ const updatePackageJson = ({ APP_NAME, isTypeScript, packageJson }) => {
         isTypeScript ? [] : ["ts-node"],
       ),
     ),
-    prisma: isTypeScript
-      ? { ...prisma, seed: prismaSeed }
-      : {
-          ...prisma,
-          seed: prismaSeed
-            .replace("ts-node", "node")
-            .replace("seed.ts", "seed.js"),
-        },
     scripts: isTypeScript
       ? { ...scripts, typecheck, validate }
       : { ...scripts, validate: validate.replace(" typecheck", "") },
@@ -138,7 +122,6 @@ const main = async ({ isTypeScript, packageManager, rootDirectory }) => {
   const FILE_EXTENSION = isTypeScript ? "ts" : "js";
 
   const README_PATH = path.join(rootDirectory, "README.md");
-  const FLY_TOML_PATH = path.join(rootDirectory, "fly.toml");
   const EXAMPLE_ENV_PATH = path.join(rootDirectory, ".env.example");
   const ENV_PATH = path.join(rootDirectory, ".env");
   const DEPLOY_WORKFLOW_PATH = path.join(
@@ -147,19 +130,10 @@ const main = async ({ isTypeScript, packageManager, rootDirectory }) => {
     "workflows",
     "deploy.yml",
   );
-  const DOCKERFILE_PATH = path.join(rootDirectory, "Dockerfile");
   const CYPRESS_SUPPORT_PATH = path.join(rootDirectory, "cypress", "support");
   const CYPRESS_COMMANDS_PATH = path.join(
     CYPRESS_SUPPORT_PATH,
     `commands.${FILE_EXTENSION}`,
-  );
-  const CREATE_USER_COMMAND_PATH = path.join(
-    CYPRESS_SUPPORT_PATH,
-    `create-user.${FILE_EXTENSION}`,
-  );
-  const DELETE_USER_COMMAND_PATH = path.join(
-    CYPRESS_SUPPORT_PATH,
-    `delete-user.${FILE_EXTENSION}`,
   );
   const VITEST_CONFIG_PATH = path.join(
     rootDirectory,
@@ -176,24 +150,16 @@ const main = async ({ isTypeScript, packageManager, rootDirectory }) => {
     .replace(/[^a-zA-Z0-9-_]/g, "-");
 
   const [
-    prodContent,
     readme,
     env,
-    dockerfile,
     cypressCommands,
-    createUserCommand,
-    deleteUserCommand,
     deployWorkflow,
     vitestConfig,
     packageJson,
   ] = await Promise.all([
-    fs.readFile(FLY_TOML_PATH, "utf-8"),
     fs.readFile(README_PATH, "utf-8"),
     fs.readFile(EXAMPLE_ENV_PATH, "utf-8"),
-    fs.readFile(DOCKERFILE_PATH, "utf-8"),
     fs.readFile(CYPRESS_COMMANDS_PATH, "utf-8"),
-    fs.readFile(CREATE_USER_COMMAND_PATH, "utf-8"),
-    fs.readFile(DELETE_USER_COMMAND_PATH, "utf-8"),
     readFileIfNotTypeScript(isTypeScript, DEPLOY_WORKFLOW_PATH, (s) =>
       YAML.parse(s),
     ),
@@ -205,9 +171,6 @@ const main = async ({ isTypeScript, packageManager, rootDirectory }) => {
     /^SESSION_SECRET=.*$/m,
     `SESSION_SECRET="${getRandomString(16)}"`,
   );
-
-  const prodToml = toml.parse(prodContent);
-  prodToml.app = prodToml.app.replace(REPLACER, APP_NAME);
 
   const initInstructions = `
 - First run this stack's \`remix.init\` script and commit the changes it makes to your project.
@@ -224,25 +187,14 @@ const main = async ({ isTypeScript, packageManager, rootDirectory }) => {
     .replace(new RegExp(escapeRegExp(REPLACER), "g"), APP_NAME)
     .replace(initInstructions, "");
 
-  const newDockerfile = pm.lockfile
-    ? dockerfile.replace(
-        new RegExp(escapeRegExp("ADD package.json"), "g"),
-        `ADD package.json ${pm.lockfile}`,
-      )
-    : dockerfile;
-
   updatePackageJson({ APP_NAME, isTypeScript, packageJson });
 
   const fileOperationPromises = [
-    fs.writeFile(FLY_TOML_PATH, toml.stringify(prodToml)),
     fs.writeFile(README_PATH, newReadme),
     fs.writeFile(ENV_PATH, newEnv),
-    fs.writeFile(DOCKERFILE_PATH, newDockerfile),
     ...cleanupCypressFiles({
       fileEntries: [
         [CYPRESS_COMMANDS_PATH, cypressCommands],
-        [CREATE_USER_COMMAND_PATH, createUserCommand],
-        [DELETE_USER_COMMAND_PATH, deleteUserCommand],
       ],
       isTypeScript,
       packageManager: pm,

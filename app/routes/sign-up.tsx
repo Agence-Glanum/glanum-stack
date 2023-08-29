@@ -1,53 +1,12 @@
-import type { ActionArgs, LoaderArgs, V2_MetaFunction } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
+import type { V2_MetaFunction } from "@remix-run/node";
 import { Link, useSearchParams } from "@remix-run/react";
-import { makeDomainFunction } from "domain-functions";
-import { performMutation } from "remix-forms";
-import { z } from "zod";
 import { Form } from "~/components/common/form/form";
-
-import { createUserSession, getUser } from "~/session.server";
-import { safeRedirect } from "~/utils";
-
-const schema = z.object({
-  password: z.string().min(1),
-  email: z.string().min(1).email(),
-  redirectTo: z.string().nullable(),
-})
-
-const mutation = makeDomainFunction(schema)(async (values) => {
-  console.log(values)
-
-  return {
-    redirectTo: safeRedirect(values.redirectTo),
-    user: {id: "", name: "", token: ""}
-  }
-})
-
-export async function action({ request }: ActionArgs) {
-  const result = await performMutation({request, mutation, schema})
-
-  if (!result.success){ 
-    return json(result, 400)
-  }
-
-  return createUserSession({
-    defaultRedirectTo: result.data.redirectTo,
-    remember: false,
-    request,
-    user: result.data.user
-  });
-};
+import { action, loader } from "~/domains/auth/controllers/sign-up.server";
+import { schema } from "~/domains/auth/schemas/sign-up";
 
 export const meta: V2_MetaFunction = () => [{ title: "Sign Up" }];
 
-export async function loader({ request }: LoaderArgs) {
-  const user = await getUser(request)
-  if (user) {
-    return redirect("/")
-  }
-  return json({})
-}
+export { loader, action }
 
 export default function SignUpPage() {
   const [searchParams] = useSearchParams();
@@ -119,12 +78,6 @@ export default function SignUpPage() {
 
               <Errors />
 
-              <button
-                type="submit"
-                className="w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
-              >
-                Log in
-              </button>
               <input type="hidden" name="redirectTo" value={redirectTo} />
               <button
                 type="submit"
@@ -138,7 +91,7 @@ export default function SignUpPage() {
                   <Link
                     className="text-blue-500 underline"
                     to={{
-                      pathname: "/login",
+                      pathname: "/sign-in",
                       search: searchParams.toString(),
                     }}
                   >

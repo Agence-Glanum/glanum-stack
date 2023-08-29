@@ -1,55 +1,12 @@
-import type { ActionArgs, LoaderArgs, V2_MetaFunction } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
+import type { V2_MetaFunction } from "@remix-run/node";
 import { Link, useSearchParams } from "@remix-run/react";
-import { makeDomainFunction } from "domain-functions";
-import { performMutation } from "remix-forms";
-import { z } from "zod";
 import { Form } from "~/components/common/form/form";
-
-import { createUserSession, getUser } from "~/session.server";
-import { safeRedirect } from "~/utils";
+import { action, loader } from "~/domains/auth/controllers/sign-in.server";
+import { schema } from "~/domains/auth/schemas/sign-in";
 
 export const meta: V2_MetaFunction = () => [{ title: "Login" }];
 
-const schema = z.object({
-  password: z.string().min(1),
-  email: z.string().min(1).email(),
-  redirectTo: z.string().nullable(),
-  remember: z.enum(["on"]).nullable()
-})
-
-const mutation = makeDomainFunction(schema)(async (values) => {
-  console.log(values)
-
-  return {
-    redirectTo: safeRedirect(values.redirectTo),
-    remember: "on" ? true : false,
-    user: {id: "", name: "", token: ""}
-  }
-})
-
-export async function action({ request }: ActionArgs) {
-  const result = await performMutation({request, mutation, schema})
-
-  if (!result.success){ 
-    return json(result, 400)
-  }
-
-  return createUserSession({
-    defaultRedirectTo: result.data.redirectTo,
-    remember: result.data.remember,
-    request,
-    user: result.data.user
-  });
-};
-
-export async function loader({ request }: LoaderArgs) {
-  const user = await getUser(request)
-  if (user) {
-    return redirect("/")
-  }
-  return json({})
-};
+export { loader, action }
 
 export default function SignInPage() {
   const [searchParams] = useSearchParams()

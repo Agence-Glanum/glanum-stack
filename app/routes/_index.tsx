@@ -1,12 +1,12 @@
-import type { V2_MetaFunction } from "@remix-run/node";
-import { Form, Link } from "@remix-run/react";
+import type { V2_MetaFunction } from "@remix-run/node"
+import { Form, Link } from "@remix-run/react"
 
-import { useOptionalUser } from "~/utils";
+import { useOptionalUser } from "~/utils"
 
-export const meta: V2_MetaFunction = () => [{ title: "Remix Notes" }];
+export const meta: V2_MetaFunction = () => [{ title: "Remix Notes" }]
 
 export default function Index() {
-  const user = useOptionalUser();
+  const user = useOptionalUser()
   return (
     <main className="relative min-h-screen bg-white sm:flex sm:items-center sm:justify-center">
       <div className="relative sm:pb-16 sm:pt-8">
@@ -33,7 +33,7 @@ export default function Index() {
               <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
                 {user ? (
                   <Form action="/logout" method="post">
-                    <button 
+                    <button
                       type="submit"
                       className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 shadow-sm hover:bg-yellow-50 sm:px-8"
                     >
@@ -111,6 +111,16 @@ export default function Index() {
                 alt: "TypeScript",
                 href: "https://typescriptlang.org",
               },
+              {
+                src: "https://remix-forms.seasoned.cc/build/_assets/logo-HO2ZBFJ6.png",
+                alt: "Remix forms",
+                href: "https://remix-forms.seasoned.cc",
+              },
+              {
+                src: "https://avatars.githubusercontent.com/u/33913103",
+                alt: "Domain functions",
+                href: "https://github.com/seasonedcc/domain-functions",
+              },
             ].map((img) => (
               <a
                 key={img.href}
@@ -124,5 +134,5 @@ export default function Index() {
         </div>
       </div>
     </main>
-  );
+  )
 }

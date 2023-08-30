@@ -1,6 +1,6 @@
-import { cssBundleHref } from "@remix-run/css-bundle";
-import type { LinksFunction, LoaderArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { cssBundleHref } from "@remix-run/css-bundle"
+import type { LinksFunction, LoaderArgs } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import {
   Links,
   LiveReload,
@@ -8,10 +8,10 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "@remix-run/react";
+} from "@remix-run/react"
 
-import { getUser } from "~/domains/auth/utils/session.server";
-import stylesheet from "~/tailwind.css";
+import { getUser } from "~/domains/auth/utils/session.server"
+import stylesheet from "~/tailwind.css"
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -38,5 +38,5 @@ export default function App() {
         <LiveReload />
       </body>
     </html>
-  );
+  )
 }

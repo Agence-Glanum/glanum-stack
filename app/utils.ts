@@ -1,6 +1,8 @@
-import { useRouteLoaderData  } from "@remix-run/react";
+import { useRouteLoaderData } from "@remix-run/react"
 
-const DEFAULT_REDIRECT = "/";
+import type { User } from "./domains/auth/types/user"
+
+const DEFAULT_REDIRECT = "/"
 
 /**
  * This should be used any time the redirect path is user-provided
@@ -14,36 +16,35 @@ export function safeRedirect(
   defaultRedirect: string = DEFAULT_REDIRECT,
 ) {
   if (!to || typeof to !== "string") {
-    return defaultRedirect;
+    return defaultRedirect
   }
 
   if (!to.startsWith("/") || to.startsWith("//")) {
-    return defaultRedirect;
+    return defaultRedirect
   }
 
-  return to;
+  return to
 }
 
-
 function isUser(user: any): user is User {
-  return user && typeof user === "object" && typeof user.token === "string";
+  return user && typeof user === "object" && typeof user.token === "string"
 }
 
 export function useOptionalUser(): User | undefined {
-  const data = useRouteLoaderData("root");
+  const data = useRouteLoaderData("root")
   console.log(data)
   if (!data || !isUser(data.user)) {
-    return undefined;
+    return undefined
   }
-  return data.user;
+  return data.user
 }
 
 export function useUser(): User {
-  const maybeUser = useOptionalUser();
+  const maybeUser = useOptionalUser()
   if (!maybeUser) {
     throw new Error(
       "No user found in root loader, but user is required by useUser. If user is optional, try useOptionalUser instead.",
-    );
+    )
   }
-  return maybeUser;
+  return maybeUser
 }

@@ -1,25 +1,22 @@
-import type { V2_MetaFunction } from "@remix-run/node";
-import { Link, useSearchParams } from "@remix-run/react";
-import { Form } from "~/components/common/form/form";
-import { action, loader } from "~/domains/auth/controllers/sign-up.server";
-import { schema } from "~/domains/auth/schemas/sign-up";
+import type { V2_MetaFunction } from "@remix-run/node"
+import { Link, useSearchParams } from "@remix-run/react"
 
-export const meta: V2_MetaFunction = () => [{ title: "Sign Up" }];
+import { Form } from "~/components/common/form/form"
+import { action, loader } from "~/domains/auth/controllers/sign-up.server"
+import { schema } from "~/domains/auth/schemas/sign-up"
+
+export const meta: V2_MetaFunction = () => [{ title: "Sign Up" }]
 
 export { loader, action }
 
 export default function SignUpPage() {
-  const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo") ?? undefined;
+  const [searchParams] = useSearchParams()
+  const redirectTo = searchParams.get("redirectTo") ?? undefined
 
   return (
     <div className="flex min-h-full flex-col justify-center">
       <div className="mx-auto w-full max-w-md px-8">
-      <Form
-          schema={schema}
-          method="post"
-          className="space-y-6"
-        >
+        <Form schema={schema} method="post" className="space-y-6">
           {({ Field, Errors, register }) => (
             <>
               <Field name="email">
@@ -33,7 +30,7 @@ export default function SignUpPage() {
                     </label>
                     <div className="mt-1">
                       <input
-                        {...register('email')}
+                        {...register("email")}
                         id="email"
                         required
                         autoFocus={true}
@@ -43,7 +40,7 @@ export default function SignUpPage() {
                         aria-describedby="email-error"
                         className="w-full rounded border border-gray-500 px-2 py-1 text-lg"
                       />
-                      <Errors className="pt-1 text-red-700" id="email-error"/>
+                      <Errors className="pt-1 text-red-700" id="email-error" />
                     </div>
                   </>
                 )}
@@ -60,7 +57,7 @@ export default function SignUpPage() {
                     </label>
                     <div className="mt-1">
                       <input
-                        {...register('password')}
+                        {...register("password")}
                         id="password"
                         type="password"
                         autoComplete="current-password"
@@ -68,11 +65,11 @@ export default function SignUpPage() {
                         aria-describedby="password-error"
                         className="w-full rounded border border-gray-500 px-2 py-1 text-lg"
                       />
-                      <Errors className="pt-1 text-red-700" id="email-error"/>
+                      <Errors className="pt-1 text-red-700" id="email-error" />
                     </div>
                   </>
                 )}
-               </Field>
+              </Field>
 
               <input type="hidden" name="redirectTo" value={redirectTo} />
 
@@ -99,10 +96,10 @@ export default function SignUpPage() {
                   </Link>
                 </div>
               </div>
-          </>
+            </>
           )}
         </Form>
       </div>
     </div>
-  );
+  )
 }

@@ -1,8 +1,9 @@
-import { createCookieSessionStorage, redirect } from "@remix-run/node";
-import invariant from "tiny-invariant";
-import { User } from "~/domains/auth/types/user";
+import { createCookieSessionStorage, redirect } from "@remix-run/node"
+import invariant from "tiny-invariant"
 
-invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
+import type { User } from "~/domains/auth/types/user"
+
+invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set")
 
 export const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -13,13 +14,13 @@ export const sessionStorage = createCookieSessionStorage({
     secrets: [process.env.SESSION_SECRET],
     secure: process.env.NODE_ENV === "production",
   },
-});
+})
 
-const USER_SESSION_KEY = "user";
+const USER_SESSION_KEY = "user"
 
 export async function getSession(request: Request) {
-  const cookie = request.headers.get("Cookie");
-  return sessionStorage.getSession(cookie);
+  const cookie = request.headers.get("Cookie")
+  return sessionStorage.getSession(cookie)
 }
 
 export async function getUser(request: Request): Promise<User | undefined> {
@@ -31,7 +32,7 @@ export async function requireUser(request: Request, redirectTo: string = "/") {
   const user = await getUser(request)
 
   if (!user) {
-    const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
+    const searchParams = new URLSearchParams([["redirectTo", redirectTo]])
     throw await logout(request, `/login?${searchParams}`)
   }
 
@@ -44,12 +45,12 @@ export async function createUserSession({
   remember,
   defaultRedirectTo,
 }: {
-  request: Request;
+  request: Request
   user: User
-  remember: boolean;
-  defaultRedirectTo: string;
+  remember: boolean
+  defaultRedirectTo: string
 }) {
-  const session = await getSession(request);
+  const session = await getSession(request)
 
   session.set(USER_SESSION_KEY, user)
 
@@ -64,14 +65,14 @@ export async function createUserSession({
           : undefined,
       }),
     },
-  });
+  })
 }
 
 export async function logout(request: Request, redirectTo: string = "/") {
-  const session = await getSession(request);
+  const session = await getSession(request)
   return redirect(redirectTo, {
     headers: {
       "Set-Cookie": await sessionStorage.destroySession(session),
     },
-  });
+  })
 }

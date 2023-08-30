@@ -1,14 +1,16 @@
-import { makeDomainFunction } from "domain-functions";
-import { z } from "zod";
+import { makeDomainFunction } from "domain-functions"
+import { z } from "zod"
 
-export const checkIfEmailExists = makeDomainFunction(z.object({
+export const checkIfEmailExists = makeDomainFunction(
+  z.object({
     email: z.string().min(1),
-}))(async ({email}) => {
-    const exists = true
+  }),
+)(async ({ email }) => {
+  const exists = true
 
-    if (exists) {
-        throw new Error()
-    }
+  if (exists) {
+    throw new Error()
+  }
 
-    return email
+  return email
 })

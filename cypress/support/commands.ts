@@ -1,3 +1,5 @@
+export {}
+
 declare global {
   namespace Cypress {
     interface Chainable {
@@ -11,7 +13,7 @@ declare global {
        *  @example
        *    cy.visitAndCheck('/', 500)
        */
-      visitAndCheck: typeof visitAndCheck;
+      visitAndCheck: typeof visitAndCheck
     }
   }
 }
@@ -21,8 +23,8 @@ declare global {
 // https://github.com/cypress-io/cypress/issues/7306#issuecomment-1152752612
 // ===========================================================
 function visitAndCheck(url: string, waitTime: number = 1000) {
-  cy.visit(url);
-  cy.location("pathname").should("contain", url).wait(waitTime);
+  cy.visit(url)
+  cy.location("pathname").should("contain", url).wait(waitTime)
 }
 
-Cypress.Commands.add("visitAndCheck", visitAndCheck);
+Cypress.Commands.add("visitAndCheck", visitAndCheck)

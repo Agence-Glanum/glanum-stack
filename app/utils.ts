@@ -32,10 +32,11 @@ function isUser(user: any): user is User {
 
 export function useOptionalUser(): User | undefined {
   const data = useRouteLoaderData("root")
-  console.log(data)
+
   if (!data || !isUser(data.user)) {
     return undefined
   }
+  
   return data.user
 }
 

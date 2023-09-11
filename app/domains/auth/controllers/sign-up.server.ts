@@ -7,7 +7,7 @@ import { checkIfEmailExists } from "~/domains/auth/repositories/user.server"
 import { schema } from "~/domains/auth/schemas/sign-up"
 import { createUserSession, getUser } from "~/domains/auth/utils/session.server"
 import { safeRedirect } from "~/utils"
-import { propagateError } from "~/utils/domain-functions"
+import { propagateError } from "~/utils/domain-functions.server"
 
 import { createAccount } from "../repositories/auth.server"
 

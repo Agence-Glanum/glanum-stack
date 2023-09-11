@@ -6,7 +6,7 @@ export const attempt = makeDomainFunction(
     password: z.string().min(1),
     email: z.string().min(1),
   }),
-)(async () => {
+)(async ({}) => {
   // Access data source for the correct value
   const authAttempt = { id: "", name: "", token: "" }
 

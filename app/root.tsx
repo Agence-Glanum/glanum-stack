@@ -12,6 +12,7 @@ import {
 
 import { getUser } from "~/domains/auth/utils/session.server"
 import stylesheet from "~/tailwind.css"
+import { useIsBot } from "~/hooks/use-is-bot"
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -23,6 +24,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 }
 
 export default function App() {
+  const isBot = useIsBot()
   return (
     <html lang="en" className="h-full">
       <head>
@@ -34,7 +36,7 @@ export default function App() {
       <body className="h-full">
         <Outlet />
         <ScrollRestoration />
-        <Scripts />
+        {isBot ? null : <Scripts />}
         <LiveReload />
       </body>
     </html>

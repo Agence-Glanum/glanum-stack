@@ -7,7 +7,7 @@ import { attempt } from "~/domains/auth/repositories/auth.server"
 import { schema } from "~/domains/auth/schemas/sign-in"
 import { createUserSession, getUser } from "~/domains/auth/utils/session.server"
 import { safeRedirect } from "~/utils"
-import { propagateError } from "~/utils/domain-functions"
+import { propagateError } from "~/utils/domain-functions.server"
 
 const login = makeDomainFunction(schema)(async (values) => {
   const auth = propagateError(

@@ -1,11 +1,11 @@
-import type { V2_MetaFunction } from "@remix-run/node"
+import type { MetaFunction } from "@remix-run/node"
 import { Link, useSearchParams } from "@remix-run/react"
 
 import { Form } from "~/components/common/form/form"
 import { action, loader } from "~/domains/auth/controllers/sign-in.server"
 import { schema } from "~/domains/auth/schemas/sign-in"
 
-export const meta: V2_MetaFunction = () => [{ title: "Login" }]
+export const meta: MetaFunction = () => [{ title: "Login" }]
 
 export { loader, action }
 

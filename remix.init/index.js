@@ -1,39 +1,20 @@
-const { execSync } = require("child_process")
-const crypto = require("crypto")
-const fs = require("fs/promises")
-const path = require("path")
+const { execSync } = require("node:child_process")
+const crypto = require("node:crypto")
+const fs = require("node:fs/promises")
+const path = require("node:path")
 
 const PackageJson = require("@npmcli/package-json")
 const semver = require("semver")
-const YAML = require("yaml")
 
-const cleanupCypressFiles = ({ fileEntries, isTypeScript, packageManager }) =>
+const cleanupCypressFiles = ({ fileEntries, packageManager }) =>
   fileEntries.flatMap(([filePath, content]) => {
     const newContent = content.replace(
       new RegExp("npx ts-node", "g"),
-      isTypeScript ? `${packageManager.exec} ts-node` : "node",
+      `${packageManager.exec} ts-node`,
     )
 
     return [fs.writeFile(filePath, newContent)]
   })
-
-const cleanupDeployWorkflow = (deployWorkflow, deployWorkflowPath) => {
-  delete deployWorkflow.jobs.typecheck
-  deployWorkflow.jobs.deploy.needs = deployWorkflow.jobs.deploy.needs.filter(
-    (need) => need !== "typecheck",
-  )
-
-  return [fs.writeFile(deployWorkflowPath, YAML.stringify(deployWorkflow))]
-}
-
-const cleanupVitestConfig = (vitestConfig, vitestConfigPath) => {
-  const newVitestConfig = vitestConfig.replace(
-    "setup-test-env.ts",
-    "setup-test-env.js",
-  )
-
-  return [fs.writeFile(vitestConfigPath, newVitestConfig)]
-}
 
 const escapeRegExp = (string) =>
   // $& means the whole matched string
@@ -74,15 +55,6 @@ const getPackageManagerVersion = (packageManager) =>
 
 const getRandomString = (length) => crypto.randomBytes(length).toString("hex")
 
-const readFileIfNotTypeScript = (
-  isTypeScript,
-  filePath,
-  parseFunction = (result) => result,
-) =>
-  isTypeScript
-    ? Promise.resolve()
-    : fs.readFile(filePath, "utf-8").then(parseFunction)
-
 const removeUnusedDependencies = (dependencies, unusedDependencies) =>
   Object.fromEntries(
     Object.entries(dependencies).filter(
@@ -90,7 +62,7 @@ const removeUnusedDependencies = (dependencies, unusedDependencies) =>
     ),
   )
 
-const updatePackageJson = ({ APP_NAME, isTypeScript, packageJson }) => {
+const updatePackageJson = ({ APP_NAME, packageJson }) => {
   const {
     devDependencies,
     scripts: {
@@ -107,40 +79,23 @@ const updatePackageJson = ({ APP_NAME, isTypeScript, packageJson }) => {
     devDependencies: removeUnusedDependencies(
       devDependencies,
       // packages that are only used for linting the repo
-      ["eslint-plugin-markdown", "eslint-plugin-prefer-let"].concat(
-        isTypeScript ? [] : ["ts-node"],
-      ),
+      ["eslint-plugin-markdown", "eslint-plugin-prefer-let"],
     ),
-    scripts: isTypeScript
-      ? { ...scripts, typecheck, validate }
-      : { ...scripts, validate: validate.replace(" typecheck", "") },
+    scripts,
   })
 }
 
-const main = async ({ isTypeScript, packageManager, rootDirectory }) => {
+const main = async ({ packageManager, rootDirectory }) => {
   const pm = getPackageManagerCommand(packageManager)
-  const FILE_EXTENSION = isTypeScript ? "ts" : "js"
 
   const README_PATH = path.join(rootDirectory, "README.md")
   const EXAMPLE_ENV_PATH = path.join(rootDirectory, ".env.example")
   const ENV_PATH = path.join(rootDirectory, ".env")
-  const DEPLOY_WORKFLOW_PATH = path.join(
-    rootDirectory,
-    ".github",
-    "workflows",
-    "deploy.yml",
-  )
-  const CYPRESS_SUPPORT_PATH = path.join(rootDirectory, "cypress", "support")
-  const CYPRESS_COMMANDS_PATH = path.join(
-    CYPRESS_SUPPORT_PATH,
-    `commands.${FILE_EXTENSION}`,
-  )
-  const VITEST_CONFIG_PATH = path.join(
-    rootDirectory,
-    `vitest.config.${FILE_EXTENSION}`,
-  )
 
-  const REPLACER = "indie-stack-template"
+  const CYPRESS_SUPPORT_PATH = path.join(rootDirectory, "cypress", "support")
+  const CYPRESS_COMMANDS_PATH = path.join(CYPRESS_SUPPORT_PATH, "commands.ts");
+
+  const REPLACER = "glanum-stack-template"
 
   const DIR_NAME = path.basename(rootDirectory)
   const SUFFIX = getRandomString(2)
@@ -153,17 +108,11 @@ const main = async ({ isTypeScript, packageManager, rootDirectory }) => {
     readme,
     env,
     cypressCommands,
-    deployWorkflow,
-    vitestConfig,
     packageJson,
   ] = await Promise.all([
     fs.readFile(README_PATH, "utf-8"),
     fs.readFile(EXAMPLE_ENV_PATH, "utf-8"),
     fs.readFile(CYPRESS_COMMANDS_PATH, "utf-8"),
-    readFileIfNotTypeScript(isTypeScript, DEPLOY_WORKFLOW_PATH, (s) =>
-      YAML.parse(s),
-    ),
-    readFileIfNotTypeScript(isTypeScript, VITEST_CONFIG_PATH),
     PackageJson.load(rootDirectory),
   ])
 
@@ -187,14 +136,13 @@ const main = async ({ isTypeScript, packageManager, rootDirectory }) => {
     .replace(new RegExp(escapeRegExp(REPLACER), "g"), APP_NAME)
     .replace(initInstructions, "")
 
-  updatePackageJson({ APP_NAME, isTypeScript, packageJson })
+  updatePackageJson({ APP_NAME, packageJson })
 
-  const fileOperationPromises = [
+  await Promise.all([
     fs.writeFile(README_PATH, newReadme),
     fs.writeFile(ENV_PATH, newEnv),
     ...cleanupCypressFiles({
       fileEntries: [[CYPRESS_COMMANDS_PATH, cypressCommands]],
-      isTypeScript,
       packageManager: pm,
     }),
     packageJson.save(),
@@ -212,19 +160,7 @@ const main = async ({ isTypeScript, packageManager, rootDirectory }) => {
     fs.rm(path.join(rootDirectory, ".github", "PULL_REQUEST_TEMPLATE.md")),
     fs.rm(path.join(rootDirectory, ".eslintrc.repo.js")),
     fs.rm(path.join(rootDirectory, "LICENSE.md")),
-  ]
-
-  if (!isTypeScript) {
-    fileOperationPromises.push(
-      ...cleanupDeployWorkflow(deployWorkflow, DEPLOY_WORKFLOW_PATH),
-    )
-
-    fileOperationPromises.push(
-      ...cleanupVitestConfig(vitestConfig, VITEST_CONFIG_PATH),
-    )
-  }
-
-  await Promise.all(fileOperationPromises)
+  ])
 
   execSync(pm.run("setup"), { cwd: rootDirectory, stdio: "inherit" })
 

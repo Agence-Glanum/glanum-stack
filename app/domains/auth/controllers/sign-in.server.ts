@@ -1,4 +1,4 @@
-import type { ActionArgs, LoaderArgs} from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node"
 import { makeDomainFunction } from "domain-functions"
 import { performMutation } from "remix-forms"
@@ -21,7 +21,7 @@ const login = makeDomainFunction(schema)(async (values) => {
   }
 })
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const result = await performMutation({ request, mutation: login, schema })
 
   if (!result.success) {
@@ -36,7 +36,7 @@ export async function action({ request }: ActionArgs) {
   })
 }
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
   if (user) {
     return redirect("/")

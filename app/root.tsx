@@ -1,5 +1,5 @@
 import { cssBundleHref } from "@remix-run/css-bundle"
-import type { LinksFunction, LoaderArgs } from "@remix-run/node"
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import {
   Links,
@@ -10,7 +10,7 @@ import {
   ScrollRestoration,
 } from "@remix-run/react"
 
-import { getUser } from "~/domains/auth/utils/session.server"
+import { getUser } from "~/domains/auth/services/session.server"
 import stylesheet from "~/tailwind.css"
 import { useIsBot } from "~/hooks/use-is-bot"
 
@@ -19,7 +19,7 @@ export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ]
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({ user: await getUser(request) })
 }
 

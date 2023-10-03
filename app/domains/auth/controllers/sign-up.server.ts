@@ -5,11 +5,12 @@ import { performMutation } from "remix-forms"
 
 import { checkIfEmailExists } from "~/domains/auth/repositories/user.server"
 import { schema } from "~/domains/auth/schemas/sign-up"
-import { createUserSession, getUser } from "~/domains/auth/utils/session.server"
+import { createUserSession, getUser } from "~/domains/auth/services/session.server"
 import { safeRedirect } from "~/utils"
 import { propagateError } from "~/utils/domain-functions.server"
 
 import { createAccount } from "../repositories/auth.server"
+import { authenticator } from "../services/auth.server";
 
 const register = makeDomainFunction(schema)(async (values) => {
   const checkIfEmailExistsResult = await checkIfEmailExists({
@@ -40,6 +41,7 @@ export async function action({ request }: ActionFunctionArgs) {
   return createUserSession({
     defaultRedirectTo: result.data.redirectTo,
     remember: false,
+    sessionKey: authenticator.sessionKey,
     request,
     user: result.data.user,
   })

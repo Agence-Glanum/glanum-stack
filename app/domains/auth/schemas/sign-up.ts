@@ -5,3 +5,9 @@ export const schema = z.object({
   email: z.string().min(1).email(),
   redirectTo: z.string().nullable(),
 })
+
+const Request: z.ZodType<Request> = z.any()
+
+export const envSchema = z.object({
+  request: Request
+})

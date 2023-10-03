@@ -3,26 +3,28 @@ import { json, redirect } from "@remix-run/node"
 import { makeDomainFunction } from "domain-functions"
 import { performMutation } from "remix-forms"
 
-import { attempt } from "~/domains/auth/repositories/auth.server"
-import { schema } from "~/domains/auth/schemas/sign-in"
-import { createUserSession, getUser } from "~/domains/auth/utils/session.server"
+import { envSchema, schema } from "~/domains/auth/schemas/sign-in"
+import { createUserSession, getUser } from "~/domains/auth/services/session.server"
 import { safeRedirect } from "~/utils"
-import { propagateError } from "~/utils/domain-functions.server"
+import { authenticator } from "../services/auth.server";
 
-const login = makeDomainFunction(schema)(async (values) => {
-  const auth = propagateError(
-    await attempt({ password: values.password, email: values.email }),
-  )
+const login = makeDomainFunction(schema, envSchema)(async (values, env) => {
+  const user = await authenticator.authenticate("api-proxy", env.request)
 
   return {
     redirectTo: safeRedirect(values.redirectTo),
     remember: "on" ? true : false,
-    user: { ...auth.data.user },
+    user: { ...user },
   }
 })
 
 export async function action({ request }: ActionFunctionArgs) {
-  const result = await performMutation({ request, mutation: login, schema })
+  const result = await performMutation({
+    request,
+    mutation: login,
+    schema,
+    environment: { request }
+  })
 
   if (!result.success) {
     return json(result, 400)
@@ -31,6 +33,7 @@ export async function action({ request }: ActionFunctionArgs) {
   return createUserSession({
     defaultRedirectTo: result.data.redirectTo,
     remember: result.data.remember,
+    sessionKey: authenticator.sessionKey,
     request,
     user: result.data.user,
   })

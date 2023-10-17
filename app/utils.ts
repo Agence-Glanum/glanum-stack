@@ -27,7 +27,7 @@ export function safeRedirect(
 }
 
 function isUser(user: any): user is User {
-  return user && typeof user === "object" && typeof user.token === "string"
+  return user !== null && typeof user === "object" && "email" in user && typeof user.token === "string"
 }
 
 export function useOptionalUser(): User | undefined {

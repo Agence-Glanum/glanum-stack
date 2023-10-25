@@ -70,8 +70,6 @@ const updatePackageJson = ({ APP_NAME, packageJson, packageManager }) => {
     scripts: {
       // eslint-disable-next-line no-unused-vars
       "format:repo": _repoFormatScript,
-      typecheck,
-      validate,
       ...scripts
     },
   } = packageJson.content

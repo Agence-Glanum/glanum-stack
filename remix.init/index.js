@@ -10,7 +10,7 @@ const cleanupCypressFiles = ({ fileEntries, packageManager }) =>
   fileEntries.flatMap(([filePath, content]) => {
     const newContent = content.replace(
       new RegExp("npx ts-node", "g"),
-      `${packageManager.exec} ts-node`,
+      packageManager.name === "bun" ? "bun" : `${packageManager.exec} ts-node`,
     )
 
     return [fs.writeFile(filePath, newContent)]
@@ -23,9 +23,16 @@ const escapeRegExp = (string) =>
 const getPackageManagerCommand = (packageManager) =>
   // Inspired by https://github.com/nrwl/nx/blob/bd9b33eaef0393d01f747ea9a2ac5d2ca1fb87c6/packages/nx/src/utils/package-manager.ts#L38-L103
   ({
+    bun: () => ({
+      exec: "bunx",
+      lockfile: "bun.lockb",
+      name: "bun",
+      run: (script, args) => `bun run ${script} ${args || ""}`,
+    }),
     npm: () => ({
       exec: "npx",
       lockfile: "package-lock.json",
+      name: "npm",
       run: (script, args) => `npm run ${script} ${args ? `-- ${args}` : ""}`,
     }),
     pnpm: () => {
@@ -36,6 +43,7 @@ const getPackageManagerCommand = (packageManager) =>
       return {
         exec: useExec ? "pnpm exec" : "pnpx",
         lockfile: "pnpm-lock.yaml",
+        name: "pnpm",
         run: (script, args) =>
           includeDoubleDashBeforeArgs
             ? `pnpm run ${script} ${args ? `-- ${args}` : ""}`
@@ -45,6 +53,7 @@ const getPackageManagerCommand = (packageManager) =>
     yarn: () => ({
       exec: "yarn",
       lockfile: "yarn.lock",
+      name: "yarn",
       run: (script, args) => `yarn ${script} ${args || ""}`,
     }),
   })[packageManager]()
@@ -55,8 +64,9 @@ const getPackageManagerVersion = (packageManager) =>
 
 const getRandomString = (length) => crypto.randomBytes(length).toString("hex")
 
-const updatePackageJson = ({ APP_NAME, packageJson }) => {
+const updatePackageJson = ({ APP_NAME, packageJson, packageManager }) => {
   const {
+    devDependencies,
     scripts: {
       // eslint-disable-next-line no-unused-vars
       "format:repo": _repoFormatScript,
@@ -68,6 +78,10 @@ const updatePackageJson = ({ APP_NAME, packageJson }) => {
 
   packageJson.update({
     name: APP_NAME,
+    devDependencies:
+      packageManager.name === "bun"
+        ? removeUnusedDependencies(devDependencies, ["ts-node"])
+        : devDependencies,
     scripts,
   })
 }
@@ -123,7 +137,7 @@ const main = async ({ packageManager, rootDirectory }) => {
     .replace(new RegExp(escapeRegExp(REPLACER), "g"), APP_NAME)
     .replace(initInstructions, "")
 
-  updatePackageJson({ APP_NAME, packageJson })
+  updatePackageJson({ APP_NAME, packageJson, packageManager: pm })
 
   await Promise.all([
     fs.writeFile(README_PATH, newReadme),

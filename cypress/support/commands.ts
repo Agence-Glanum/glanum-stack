@@ -27,4 +27,7 @@ function visitAndCheck(url: string, waitTime: number = 1000) {
   cy.location("pathname").should("contain", url).wait(waitTime)
 }
 
-Cypress.Commands.add("visitAndCheck", visitAndCheck)
+export const registerCommands = () => {
+  Cypress.Commands.add("visitAndCheck", visitAndCheck)
+};
+

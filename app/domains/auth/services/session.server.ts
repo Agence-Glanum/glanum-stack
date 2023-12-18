@@ -27,11 +27,21 @@ export async function getUser(request: Request): Promise<User | null> {
   return await authenticator.isAuthenticated(session);
 }
 
-export async function requireUser(request: Request, redirectTo: string = "/") {
+export async function requireUser(
+  request: Request,
+  redirectTo: string | null = null,
+) {
   const user = await getUser(request)
 
   if (!user) {
-    const searchParams = new URLSearchParams([["redirectTo", redirectTo]])
+    let to = "/"
+
+    if (!redirectTo) {
+      const url = new URL(request.url)
+      to = url.pathname
+    }
+
+    const searchParams = new URLSearchParams([["redirectTo", to]])
     throw await logout(request, `/login?${searchParams}`)
   }
 

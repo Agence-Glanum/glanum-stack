@@ -79,6 +79,12 @@ module.exports = {
             "newlines-between": "always",
           },
         ],
+        "@typescript-eslint/no-namespace": [
+          "error",
+          {
+            allowDeclarations: true,
+          },
+        ],
       },
     },
 
@@ -127,4 +133,4 @@ module.exports = {
       },
     },
   ],
-};
+}

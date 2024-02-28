@@ -1,7 +1,9 @@
 import type { MetaFunction } from "@remix-run/node"
 import { Link, useSearchParams } from "@remix-run/react"
+import { useTranslation } from "react-i18next"
 
 import { Form } from "~/components/common/form/form"
+import { Button } from "~/components/common/ui/button"
 import { action, loader } from "~/domains/auth/controllers/sign-in.server"
 import { schema } from "~/domains/auth/schemas/sign-in"
 
@@ -12,6 +14,8 @@ export { loader, action }
 export default function SignInPage() {
   const [searchParams] = useSearchParams()
   const redirectTo = searchParams.get("redirectTo") || "/"
+
+  const { t } = useTranslation()
 
   return (
     <div className="flex min-h-full flex-col justify-center">
@@ -26,7 +30,7 @@ export default function SignInPage() {
                       htmlFor="email"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      Email address
+                      {t("Email address")}
                     </label>
                     <div className="mt-1">
                       <input
@@ -53,7 +57,7 @@ export default function SignInPage() {
                       htmlFor="password"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      Password
+                      {t("Password")}
                     </label>
                     <div className="mt-1">
                       <input
@@ -75,12 +79,12 @@ export default function SignInPage() {
 
               <Errors />
 
-              <button
-                type="submit"
-                className="w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
+              <Button
+                 type="submit"
+                 className="w-full"
               >
-                Log in
-              </button>
+                {t("Log in")}
+              </Button>
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
@@ -94,20 +98,24 @@ export default function SignInPage() {
                     htmlFor="remember"
                     className="ml-2 block text-sm text-gray-900"
                   >
-                    Remember me
+                    {t("Remember me")}
                   </label>
                 </div>
                 <div className="text-center text-sm text-gray-500">
-                  Don't have an account?{" "}
-                  <Link
-                    className="text-blue-500 underline"
-                    to={{
-                      pathname: "/sign-up",
-                      search: searchParams.toString(),
-                    }}
+                {t("Don't have an account?")}{" "}
+                  <Button
+                    variant="outline"
+                    asChild
                   >
-                    Sign up
-                  </Link>
+                    <Link
+                      to={{
+                        pathname: "/sign-up",
+                        search: searchParams.toString(),
+                      }}
+                    >
+                      {t("Sign up")}
+                    </Link>
+                  </Button>
                 </div>
               </div>
             </>

@@ -1,5 +1,5 @@
 import { Authenticator } from "remix-auth";
-import { sessionStorage } from "./session.server";
+import { sessionStorage } from "./init.server";
 import { User } from "../types/user";
 import { ApiProxyStrategy } from "../strategies/api-proxy-strategy.server";
 import { attempt } from "../repositories/auth.server";

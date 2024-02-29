@@ -1,14 +1,20 @@
 import type { MetaFunction } from "@remix-run/node"
 import { Form, Link } from "@remix-run/react"
+import { AuthenticityTokenInput } from "remix-utils/csrf/react"
 
 import { useOptionalUser } from "~/utils"
+import DarkModePicker from "~/components/common/dark-mode-picker/dark-mode-picker"
+import { useTranslation } from "react-i18next"
 
-export const meta: MetaFunction = () => [{ title: "Remix Notes" }]
+export const meta: MetaFunction = () => [{ title: "Glanum stack" }]
 
 export default function Index() {
   const user = useOptionalUser()
+
+  const { t } = useTranslation()
+
   return (
-    <main className="relative min-h-screen bg-white sm:flex sm:items-center sm:justify-center">
+    <main className="relative min-h-screen sm:flex sm:items-center sm:justify-center">
       <div className="relative sm:pb-16 sm:pt-8">
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="relative shadow-xl sm:overflow-hidden sm:rounded-2xl">
@@ -33,6 +39,7 @@ export default function Index() {
               <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
                 {user ? (
                   <Form action="/logout" method="post">
+                    <AuthenticityTokenInput />
                     <button
                       type="submit"
                       className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 shadow-sm hover:bg-yellow-50 sm:px-8"
@@ -46,16 +53,21 @@ export default function Index() {
                       to="/sign-up"
                       className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 shadow-sm hover:bg-yellow-50 sm:px-8"
                     >
-                      Sign up
+                      {t("Sign up")}
                     </Link>
                     <Link
                       to="/sign-in"
                       className="flex items-center justify-center rounded-md bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600"
                     >
-                      Log In
+                      {t("Sign in")}
                     </Link>
                   </div>
                 )}
+              </div>
+              <div className="mt-8 flex justify-center">
+                <div className="bg-background rounded p-1">
+                  <DarkModePicker />
+                </div>
               </div>
               <a href="https://remix.run">
                 <img
@@ -112,9 +124,9 @@ export default function Index() {
                 href: "https://typescriptlang.org",
               },
               {
-                src: "https://remix-forms.seasoned.cc/build/_assets/logo-HO2ZBFJ6.png",
-                alt: "Remix forms",
-                href: "https://remix-forms.seasoned.cc",
+                src: "",
+                alt: "Conform",
+                href: "https://conform.guide/",
               },
               {
                 src: "https://avatars.githubusercontent.com/u/33913103",

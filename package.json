@@ -29,8 +29,14 @@
     "/public/build"
   ],
   "dependencies": {
+    "@conform-to/react": "^1.0.2",
+    "@conform-to/zod": "^1.0.2",
     "@radix-ui/react-icons": "^1.3.0",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-popover": "^1.0.7",
     "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-toggle": "^1.0.3",
+    "@radix-ui/react-toggle-group": "^1.0.4",
     "@remix-run/dev": "^2.7.2",
     "@remix-run/node": "^2.7.2",
     "@remix-run/react": "^2.7.2",
@@ -53,7 +59,6 @@
     "react-hook-form": "^7.50.1",
     "react-i18next": "^14.0.5",
     "remix-auth": "^3.6.0",
-    "remix-forms": "^2.2.1",
     "remix-i18next": "^6.0.1",
     "remix-typedjson": "^0.4.1",
     "remix-utils": "^7.5.0",

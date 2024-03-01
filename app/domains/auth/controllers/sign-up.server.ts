@@ -2,7 +2,6 @@ import { parseWithZod } from "@conform-to/zod"
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
 import { makeDomainFunction } from "domain-functions"
-import { $path } from 'remix-routes'
 import { typedjson } from "remix-typedjson"
 
 import { schema } from "~/domains/auth/schemas/sign-up"
@@ -27,7 +26,7 @@ const register = makeDomainFunction(schema)(async ({
   const result = propagateError(await createAccount({ password, email }))
 
   return {
-    redirectTo: safeRedirect(redirectTo ?? $path("/")),
+    redirectTo: safeRedirect(redirectTo ?? "/"),
     user: { ...result.data },
   }
 })
@@ -68,7 +67,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
   if (user) {
-    return redirect($path("/"))
+    return redirect("/")
   }
 
   const t = await i18next.getFixedT(request)

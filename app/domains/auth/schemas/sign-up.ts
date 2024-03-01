@@ -12,5 +12,5 @@ export const schema = z.object({
 const Request: z.ZodType<Request> = z.any()
 
 export const envSchema = z.object({
-  request: Request
+  request: Request,
 })

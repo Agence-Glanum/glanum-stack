@@ -1,18 +1,17 @@
+import { getFormProps, getInputProps, useForm } from "@conform-to/react"
+import { parseWithZod } from "@conform-to/zod"
 import type { MetaFunction } from "@remix-run/node"
 import { Link, useActionData, useSearchParams } from "@remix-run/react"
 import { useTranslation } from "react-i18next"
-import { getFormProps, getInputProps, useForm } from '@conform-to/react'
+import { AuthenticityTokenInput } from "remix-utils/csrf/react"
 
+import DarkModePickerPopover from "~/components/common/dark-mode-picker/dark-mode-picker-popover/dark-mode-picker-popover"
+import Errors from "~/components/common/form/errors/errors"
 import { Button } from "~/components/common/ui/button"
+import { Input } from "~/components/common/ui/input"
+import { Label } from "~/components/common/ui/label"
 import { action, loader } from "~/domains/auth/controllers/sign-in.server"
 import { schema } from "~/domains/auth/schemas/sign-in"
-import { parseWithZod } from "@conform-to/zod"
-import { Input } from "~/components/common/ui/input"
-import { AuthenticityTokenInput } from "remix-utils/csrf/react"
-import { Label } from "~/components/common/ui/label"
-import Errors from "~/components/common/form/errors/errors"
-import DarkModePickerPopover
-  from "~/components/common/dark-mode-picker/dark-mode-picker-popover/dark-mode-picker-popover"
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => [
   { title: data?.title },
@@ -24,10 +23,10 @@ export default function SignInPage() {
   const lastResult = useActionData<typeof action>()
   const [form, fields] = useForm({
     lastResult,
-    shouldValidate: 'onBlur',
+    shouldValidate: "onBlur",
     onValidate({ formData }) {
-      return parseWithZod(formData, { schema });
-    }
+      return parseWithZod(formData, { schema })
+    },
   })
   const [searchParams] = useSearchParams()
   const { t } = useTranslation()
@@ -39,23 +38,20 @@ export default function SignInPage() {
       <div className="absolute top-[15px] right-[15px]">
         <DarkModePickerPopover />
       </div>
-      <div className="mx-auto w-full max-w-md px-8">
+      <div className="mx-auto w-full max-w-md py-4 px-8 rounded-xl border bg-card text-card-foreground shadow">
         <h1 className="w-full text-center text-2xl font-bold">
           {t("Sign in")}
         </h1>
         <form method="post" className="space-y-6" {...getFormProps(form)}>
-
           <AuthenticityTokenInput />
 
           <input type="hidden" name="redirectTo" value={redirectTo} />
 
           <div>
-            <Label htmlFor={fields.email.id}>
-              {t("Email address")}
-            </Label>
+            <Label htmlFor={fields.email.id}>{t("Email address")}</Label>
             <div className="mt-1">
               <Input
-                {...getInputProps(fields.email, { type: 'email' })}
+                {...getInputProps(fields.email, { type: "email" })}
                 required
               />
               {fields.email.errors ? (
@@ -64,18 +60,16 @@ export default function SignInPage() {
                   id={fields.email.errorId}
                 >
                   {fields.email.errors}
-                  </div>
-              ): null}
+                </div>
+              ) : null}
             </div>
           </div>
 
           <div>
-            <Label htmlFor={fields.password.id}>
-              {t("Password")}
-            </Label>
+            <Label htmlFor={fields.password.id}>{t("Password")}</Label>
             <div className="mt-1">
               <Input
-                {...getInputProps(fields.password, { type: 'password' })}
+                {...getInputProps(fields.password, { type: "password" })}
                 required
               />
               {fields.password.errors ? (
@@ -84,31 +78,22 @@ export default function SignInPage() {
                   id={fields.password.errorId}
                 >
                   {fields.password.errors}
-                  </div>
-              ): null}
+                </div>
+              ) : null}
             </div>
           </div>
 
           {form.errors ? (
-            <Errors>
-              {form.errors.map((error) => error)}
-            </Errors>
-          ): null}
+            <Errors>{form.errors.map((error) => error)}</Errors>
+          ) : null}
 
-          <Button
-            type="submit"
-            className="w-full"
-          >
+          <Button type="submit" className="w-full">
             {t("Sign in")}
           </Button>
 
           <div className="w-full text-center text-sm text-gray-500">
             {t("Don't have an account?")}{" "}
-            <Button
-              className="px-0"
-              variant="link"
-              asChild
-            >
+            <Button className="px-0" variant="link" asChild>
               <Link
                 to={{
                   pathname: "/sign-up",

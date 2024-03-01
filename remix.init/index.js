@@ -64,6 +64,13 @@ const getPackageManagerVersion = (packageManager) =>
 
 const getRandomString = (length) => crypto.randomBytes(length).toString("hex")
 
+const removeUnusedDependencies = (dependencies, unusedDependencies) =>
+  Object.fromEntries(
+    Object.entries(dependencies).filter(
+      ([key]) => !unusedDependencies.includes(key),
+    ),
+  )
+
 const updatePackageJson = ({ APP_NAME, packageJson, packageManager }) => {
   const {
     devDependencies,
@@ -92,7 +99,7 @@ const main = async ({ packageManager, rootDirectory }) => {
   const ENV_PATH = path.join(rootDirectory, ".env")
 
   const CYPRESS_SUPPORT_PATH = path.join(rootDirectory, "cypress", "support")
-  const CYPRESS_COMMANDS_PATH = path.join(CYPRESS_SUPPORT_PATH, "commands.ts");
+  const CYPRESS_COMMANDS_PATH = path.join(CYPRESS_SUPPORT_PATH, "commands.ts")
 
   const REPLACER = "glanum-stack-template"
 
@@ -103,12 +110,7 @@ const main = async ({ packageManager, rootDirectory }) => {
     // get rid of anything that's not allowed in an app name
     .replace(/[^a-zA-Z0-9-_]/g, "-")
 
-  const [
-    readme,
-    env,
-    cypressCommands,
-    packageJson,
-  ] = await Promise.all([
+  const [readme, env, cypressCommands, packageJson] = await Promise.all([
     fs.readFile(README_PATH, "utf-8"),
     fs.readFile(EXAMPLE_ENV_PATH, "utf-8"),
     fs.readFile(CYPRESS_COMMANDS_PATH, "utf-8"),

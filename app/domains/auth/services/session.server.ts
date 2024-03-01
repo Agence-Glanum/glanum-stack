@@ -12,7 +12,7 @@ export async function getSession(request: Request) {
 
 export async function getUser(request: Request): Promise<User | null> {
   const session = await getSession(request)
-  return await authenticator.isAuthenticated(session);
+  return await authenticator.isAuthenticated(session)
 }
 
 export async function flashMessage(
@@ -110,12 +110,12 @@ export async function updateUserSession({
   }
 }
 
-export async function logout(request: Request, redirectTo: string = "/") {
+export async function logout(request: Request, redirectTo = "/") {
   const session = await getSession(request)
-  
+
   return redirect(redirectTo, {
     headers: {
-    "Set-Cookie": await sessionStorage.destroySession(session),
+      "Set-Cookie": await sessionStorage.destroySession(session),
     },
-  });
+  })
 }

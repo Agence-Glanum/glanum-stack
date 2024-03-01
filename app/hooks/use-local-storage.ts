@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from "react"
+import type { Dispatch, SetStateAction } from "react"
 
-import type { Dispatch, SetStateAction } from 'react'
 import { useEventCallback } from "~/hooks/use-event-callback"
 import { useEventListener } from "~/hooks/use-event-listener"
 
 declare global {
   interface WindowEventMap {
-    'local-storage': CustomEvent
+    "local-storage": CustomEvent
   }
 }
 
@@ -16,7 +16,7 @@ interface UseLocalStorageOptions<T> {
   initializeWithValue?: boolean
 }
 
-const IS_SERVER = typeof window === 'undefined'
+const IS_SERVER = typeof window === "undefined"
 
 /**
  * Custom hook for using local storage to persist state across page reloads.
@@ -42,7 +42,7 @@ export function useLocalStorage<T>(
   const { initializeWithValue = true } = options
 
   const serializer = useCallback<(value: T) => string>(
-    value => {
+    (value) => {
       if (options.serializer) {
         return options.serializer(value)
       }
@@ -53,12 +53,12 @@ export function useLocalStorage<T>(
   )
 
   const deserializer = useCallback<(value: string) => T>(
-    value => {
+    (value) => {
       if (options.deserializer) {
         return options.deserializer(value)
       }
       // Support 'undefined' as a value
-      if (value === 'undefined') {
+      if (value === "undefined") {
         return undefined as unknown as T
       }
 
@@ -69,7 +69,7 @@ export function useLocalStorage<T>(
       try {
         parsed = JSON.parse(value)
       } catch (error) {
-        console.error('Error parsing JSON:', error)
+        console.error("Error parsing JSON:", error)
         return defaultValue // Return initialValue if parsing fails
       }
 
@@ -107,7 +107,7 @@ export function useLocalStorage<T>(
 
   // Return a wrapped version of useState's setter function that ...
   // ... persists the new value to localStorage.
-  const setValue: Dispatch<SetStateAction<T>> = useEventCallback(value => {
+  const setValue: Dispatch<SetStateAction<T>> = useEventCallback((value) => {
     // Prevent build error "window is undefined" but keeps working
     if (IS_SERVER) {
       console.warn(
@@ -126,7 +126,7 @@ export function useLocalStorage<T>(
       setStoredValue(newValue)
 
       // We dispatch a custom event so every similar useLocalStorage hook is notified
-      window.dispatchEvent(new StorageEvent('local-storage', { key }))
+      window.dispatchEvent(new StorageEvent("local-storage", { key }))
     } catch (error) {
       console.warn(`Error setting localStorage key “${key}”:`, error)
     }
@@ -148,11 +148,11 @@ export function useLocalStorage<T>(
   )
 
   // this only works for other documents, not the current one
-  useEventListener('storage', handleStorageChange)
+  useEventListener("storage", handleStorageChange)
 
   // this is a custom event, triggered in writeValueToLocalStorage
   // See: useLocalStorage()
-  useEventListener('local-storage', handleStorageChange)
+  useEventListener("local-storage", handleStorageChange)
 
   return [storedValue, setValue]
 }

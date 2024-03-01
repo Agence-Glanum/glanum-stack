@@ -1,5 +1,6 @@
-import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import PropTypes from "prop-types"
+import * as React from "react"
 
 import { cn } from "~/utils/cn"
 
@@ -16,7 +17,7 @@ const alertVariants = cva(
     defaultVariants: {
       variant: "default",
     },
-  }
+  },
 )
 
 const Alert = React.forwardRef<
@@ -35,14 +36,20 @@ Alert.displayName = "Alert"
 const AlertTitle = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => (
   <h5
     ref={ref}
     className={cn("mb-1 font-medium leading-none tracking-tight", className)}
     {...props}
-  />
+  >
+    {children}
+  </h5>
 ))
 AlertTitle.displayName = "AlertTitle"
+
+AlertTitle.propTypes = {
+  className: PropTypes.string,
+}
 
 const AlertDescription = React.forwardRef<
   HTMLParagraphElement,
@@ -55,5 +62,9 @@ const AlertDescription = React.forwardRef<
   />
 ))
 AlertDescription.displayName = "AlertDescription"
+
+AlertDescription.propTypes = {
+  className: PropTypes.string,
+}
 
 export { Alert, AlertTitle, AlertDescription }

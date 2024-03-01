@@ -1,5 +1,5 @@
-import { AppLoadContext, SessionStorage } from "@remix-run/server-runtime";
-import { AuthenticateOptions, Strategy } from "remix-auth";
+import { AppLoadContext, SessionStorage } from "@remix-run/server-runtime"
+import { AuthenticateOptions, Strategy } from "remix-auth"
 
 export interface ApiProxyStrategyVerifyParams {
   form: FormData
@@ -10,18 +10,18 @@ export class ApiProxyStrategy<User> extends Strategy<
   User,
   ApiProxyStrategyVerifyParams
 > {
-  name = "api-proxy";
+  name = "api-proxy"
 
   async authenticate(
     request: Request,
     sessionStorage: SessionStorage,
-    options: AuthenticateOptions
+    options: AuthenticateOptions,
   ): Promise<User> {
-    let form = await this.readFormData(request, options);
+    const form = await this.readFormData(request, options)
 
     try {
-      let user = await this.verify({ form, context: options.context });
-      return this.success(user, request, sessionStorage, options);
+      const user = await this.verify({ form, context: options.context })
+      return this.success(user, request, sessionStorage, options)
     } catch (error) {
       if (error instanceof Error) {
         return await this.failure(
@@ -29,8 +29,8 @@ export class ApiProxyStrategy<User> extends Strategy<
           request,
           sessionStorage,
           options,
-          error
-        );
+          error,
+        )
       }
 
       if (typeof error === "string") {
@@ -39,8 +39,8 @@ export class ApiProxyStrategy<User> extends Strategy<
           request,
           sessionStorage,
           options,
-          new Error(error)
-        );
+          new Error(error),
+        )
       }
 
       return await this.failure(
@@ -48,16 +48,16 @@ export class ApiProxyStrategy<User> extends Strategy<
         request,
         sessionStorage,
         options,
-        new Error(JSON.stringify(error, null, 2))
-      );
+        new Error(JSON.stringify(error, null, 2)),
+      )
     }
   }
 
   private async readFormData(request: Request, options: AuthenticateOptions) {
     if (options.context?.formData instanceof FormData) {
-      return options.context.formData;
+      return options.context.formData
     }
 
-    return await request.formData();
+    return await request.formData()
   }
 }

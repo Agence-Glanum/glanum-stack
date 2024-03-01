@@ -2,27 +2,26 @@ import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node"
 import { json } from "@remix-run/node"
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react"
-
-import i18next from "~/i18next.server"
-import { getUser } from "~/domains/auth/services/session.server"
-import stylesheet from "~/tailwind.css?url"
-import { useIsBot } from "~/hooks/use-is-bot"
-import { csrf } from "~/utils/csrf.server"
-import { typedjson, useTypedLoaderData } from "remix-typedjson"
+import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useChangeLanguage } from "remix-i18next/react"
+import { typedjson, useTypedLoaderData } from "remix-typedjson"
 import { AuthenticityTokenProvider } from "remix-utils/csrf/react"
+
+import { getUser } from "~/domains/auth/services/session.server"
+import { useIsBot } from "~/hooks/use-is-bot"
 import { useTernaryDarkMode } from "~/hooks/use-ternary-dark-mode"
-import { useEffect } from "react"
+import i18next from "~/i18next.server"
+import stylesheet from "~/tailwind.css?url"
+import { csrf } from "~/utils/csrf.server"
 
 export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: stylesheet }
+  { rel: "stylesheet", href: stylesheet },
 ]
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -35,14 +34,15 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const user = await getUser(request)
 
-  return typedjson({
-    // prevent token leak in browser
-    user: user ? { ...user, token: "" } : undefined,
-    locale,
-    csrf: token,
-    env: process.env.APP_ENV,
-  },
-  { headers: { "set-cookie": cookieHeader } },
+  return typedjson(
+    {
+      // prevent token leak in browser
+      user: user ? { ...user, token: "" } : undefined,
+      locale,
+      csrf: token,
+      env: process.env.APP_ENV,
+    },
+    { headers: { "set-cookie": cookieHeader } },
   )
 }
 
@@ -58,7 +58,7 @@ export default function App() {
     const body = document.querySelector("body")
 
     if (body) {
-      isDarkMode ? body.classList.add('dark') : body.classList.remove("dark")
+      isDarkMode ? body.classList.add("dark") : body.classList.remove("dark")
     }
   }, [isDarkMode])
 

@@ -31,6 +31,7 @@ npx create-remix@latest --template remix-run/glanum-stack
   ```
 
 This starts your app in development mode, rebuilding assets on file changes.
+
 ## GitHub Actions
 
 We use GitHub Actions for continuous integration and deployment. Anything that gets into the `main` branch will be deployed to production after running tests/build/etc. Anything in the `dev` branch will be deployed to staging.

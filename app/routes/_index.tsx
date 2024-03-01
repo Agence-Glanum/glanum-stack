@@ -1,10 +1,10 @@
 import type { MetaFunction } from "@remix-run/node"
 import { Form, Link } from "@remix-run/react"
+import { useTranslation } from "react-i18next"
 import { AuthenticityTokenInput } from "remix-utils/csrf/react"
 
-import { useOptionalUser } from "~/utils"
 import DarkModePicker from "~/components/common/dark-mode-picker/dark-mode-picker"
-import { useTranslation } from "react-i18next"
+import { useOptionalUser } from "~/utils"
 
 export const meta: MetaFunction = () => [{ title: "Glanum stack" }]
 

@@ -1,8 +1,7 @@
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
 
-import { cn } from "~/utils/cn"
-
 import { Alert, AlertTitle } from "~/components/common/ui/alert"
+import { cn } from "~/utils/cn"
 
 export default function Errors({
   children,

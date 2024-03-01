@@ -6,11 +6,11 @@ z.setErrorMap(zodI18nMap)
 export const schema = z.object({
   password: z.string().min(1),
   email: z.string().min(1).email(),
-  redirectTo: z.string().optional()
+  redirectTo: z.string().optional(),
 })
 
 const Request: z.ZodType<Request> = z.any()
 
 export const envSchema = z.object({
-  request: Request
+  request: Request,
 })

@@ -1,6 +1,7 @@
 import type { MetaFunction } from "@remix-run/node"
 import { Form, Link } from "@remix-run/react"
 import { useTranslation } from "react-i18next"
+import { $path } from 'remix-routes'
 import { AuthenticityTokenInput } from "remix-utils/csrf/react"
 
 import DarkModePicker from "~/components/common/dark-mode-picker/dark-mode-picker"
@@ -50,13 +51,13 @@ export default function Index() {
                 ) : (
                   <div className="space-y-4 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5 sm:space-y-0">
                     <Link
-                      to="/sign-up"
+                      to={$path("/sign-up")}
                       className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 shadow-sm hover:bg-yellow-50 sm:px-8"
                     >
                       {t("Sign up")}
                     </Link>
                     <Link
-                      to="/sign-in"
+                      to={$path("/sign-in")}
                       className="flex items-center justify-center rounded-md bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600"
                     >
                       {t("Sign in")}

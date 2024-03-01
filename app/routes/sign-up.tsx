@@ -3,6 +3,7 @@ import { parseWithZod } from "@conform-to/zod"
 import type { MetaFunction } from "@remix-run/node"
 import { Link, useActionData, useSearchParams } from "@remix-run/react"
 import { useTranslation } from "react-i18next"
+import { $path } from 'remix-routes'
 import { AuthenticityTokenInput } from "remix-utils/csrf/react"
 
 import DarkModePickerPopover
@@ -96,7 +97,7 @@ export default function SignUpPage() {
             <Button className="px-0" variant="link" asChild>
               <Link
                 to={{
-                  pathname: "/sign-in",
+                  pathname: $path("/sign-in"),
                   search: searchParams.toString(),
                 }}
               >

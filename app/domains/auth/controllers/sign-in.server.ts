@@ -2,6 +2,7 @@ import { parseWithZod } from "@conform-to/zod"
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { makeDomainFunction } from "domain-functions"
+import { $path } from 'remix-routes'
 import { typedjson } from "remix-typedjson"
 
 import { envSchema, schema } from "~/domains/auth/schemas/sign-in"
@@ -73,7 +74,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
   if (user) {
-    return redirect("/")
+    return redirect($path("/"))
   }
 
   const t = await i18next.getFixedT(request)

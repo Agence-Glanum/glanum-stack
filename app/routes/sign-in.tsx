@@ -12,6 +12,7 @@ import { Input } from "~/components/common/ui/input"
 import { Label } from "~/components/common/ui/label"
 import { action, loader } from "~/domains/auth/controllers/sign-in.server"
 import { schema } from "~/domains/auth/schemas/sign-in"
+import { route } from "~/utils/route"
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => [
   { title: data?.title },
@@ -96,7 +97,7 @@ export default function SignInPage() {
             <Button className="px-0" variant="link" asChild>
               <Link
                 to={{
-                  pathname: "/sign-up",
+                  pathname: route("_app.travel.$travel", {params: "_app.travel.$travel"}),
                   search: searchParams.toString(),
                 }}
               >

@@ -3,6 +3,7 @@ import { installGlobals } from "@remix-run/node"
 import { defineConfig } from "vite"
 import { cjsInterop } from "vite-plugin-cjs-interop"
 import tsconfigPaths from "vite-tsconfig-paths"
+import routes from './vite/routes'
 
 installGlobals()
 
@@ -20,6 +21,7 @@ export default defineConfig({
       remix({
         ignoredRouteFiles: ["**/*.css"],
       }),
+    routes(),
     tsconfigPaths(),
     cjsInterop({
       // List of CJS dependencies that require interop

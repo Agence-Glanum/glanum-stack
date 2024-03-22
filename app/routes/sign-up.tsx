@@ -1,7 +1,7 @@
 import { getFormProps, getInputProps, useForm } from "@conform-to/react"
 import { parseWithZod } from "@conform-to/zod"
 import type { MetaFunction } from "@remix-run/node"
-import { Link, useActionData, useSearchParams } from "@remix-run/react"
+import { Form, Link, useActionData, useSearchParams } from "@remix-run/react"
 import { useTranslation } from "react-i18next"
 import { AuthenticityTokenInput } from "remix-utils/csrf/react"
 
@@ -43,7 +43,7 @@ export default function SignUpPage() {
         <h1 className="w-full text-center text-2xl font-bold">
           {t("Sign up")}
         </h1>
-        <form method="post" className="space-y-6" {...getFormProps(form)}>
+        <Form method="post" className="space-y-6" {...getFormProps(form)}>
           <AuthenticityTokenInput />
 
           <input type="hidden" name="redirectTo" value={redirectTo} />
@@ -104,7 +104,7 @@ export default function SignUpPage() {
               </Link>
             </Button>
           </div>
-        </form>
+        </Form>
       </div>
     </div>
   )

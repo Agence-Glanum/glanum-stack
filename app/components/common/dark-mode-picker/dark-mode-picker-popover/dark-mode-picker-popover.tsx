@@ -1,4 +1,4 @@
-import { DesktopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons"
+import { MonitorDot, Moon, Sun } from "lucide-react"
 import { useState } from "react"
 
 import DarkModePicker from "~/components/common/dark-mode-picker/dark-mode-picker"
@@ -13,7 +13,10 @@ import { useTernaryDarkMode } from "~/hooks/use-ternary-dark-mode"
 export default function DarkModePickerPopover() {
   const [open, setOpen] = useState(false)
 
-  const ternaryProps = useTernaryDarkMode({initializeWithValue: false, defaultValue: "system"})
+  const ternaryProps = useTernaryDarkMode({
+    initializeWithValue: false,
+    defaultValue: "system",
+  })
 
   const { ternaryDarkMode } = ternaryProps
 
@@ -22,10 +25,10 @@ export default function DarkModePickerPopover() {
       <PopoverTrigger asChild>
         <Button variant={open ? "secondary" : "ghost"}>
           <span className="sr-only">{ternaryDarkMode}</span>
-          {ternaryDarkMode === "dark" ? <MoonIcon className="w-4 h-4" /> : null}
-          {ternaryDarkMode === "light" ? <SunIcon className="w-4 h-4" /> : null}
+          {ternaryDarkMode === "dark" ? <Moon className="w-4 h-4" /> : null}
+          {ternaryDarkMode === "light" ? <Sun className="w-4 h-4" /> : null}
           {ternaryDarkMode === "system" ? (
-            <DesktopIcon className="w-4 h-4" />
+            <MonitorDot className="w-4 h-4" />
           ) : null}
         </Button>
       </PopoverTrigger>

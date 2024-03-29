@@ -1,4 +1,6 @@
-import { DesktopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons"
+/* eslint react-hooks/rules-of-hooks: 0 */
+
+import { MonitorDot, Moon, Sun } from "lucide-react"
 
 import {
   ToggleGroup,
@@ -17,8 +19,8 @@ export default function DarkModePicker({
   useTernaryDarkModeOutput,
 }: DarkModePickerProps) {
   const { ternaryDarkMode, setTernaryDarkMode } =
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useTernaryDarkModeOutput ?? useTernaryDarkMode({initializeWithValue: false, defaultValue: "system"})
+    useTernaryDarkModeOutput ??
+    useTernaryDarkMode({ initializeWithValue: false, defaultValue: "system" })
 
   type TernaryDarkMode = typeof ternaryDarkMode
 
@@ -29,13 +31,13 @@ export default function DarkModePicker({
   return (
     <ToggleGroup type="single" value={ternaryDarkMode} onValueChange={onChange}>
       <ToggleGroupItem value="dark">
-        <MoonIcon className="w-4 h-4" />
+        <Moon className="w-4 h-4" />
       </ToggleGroupItem>
       <ToggleGroupItem value="system">
-        <DesktopIcon className="w-4 h-4" />
+        <MonitorDot className="w-4 h-4" />
       </ToggleGroupItem>
       <ToggleGroupItem value="light">
-        <SunIcon className="w-4 h-4" />
+        <Sun className="w-4 h-4" />
       </ToggleGroupItem>
     </ToggleGroup>
   )

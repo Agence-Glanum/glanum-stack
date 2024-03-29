@@ -1,4 +1,4 @@
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
+import { TriangleAlert } from "lucide-react"
 
 import { Alert, AlertTitle } from "~/components/common/ui/alert"
 import { cn } from "~/utils/cn"
@@ -17,7 +17,7 @@ export default function Errors({
       )}
       {...props}
     >
-      <ExclamationTriangleIcon className="h-4 w-4" />
+      <TriangleAlert className="h-4 w-4" />
       <AlertTitle>{children}</AlertTitle>
     </Alert>
   )

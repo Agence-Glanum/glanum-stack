@@ -5,8 +5,7 @@ import { Form, Link, useActionData, useSearchParams } from "@remix-run/react"
 import { useTranslation } from "react-i18next"
 import { AuthenticityTokenInput } from "remix-utils/csrf/react"
 
-import DarkModePickerPopover
-  from "~/components/common/dark-mode-picker/dark-mode-picker-popover/dark-mode-picker-popover"
+import DarkModePickerPopover from "~/components/common/dark-mode-picker/dark-mode-picker-popover/dark-mode-picker-popover"
 import Errors from "~/components/common/form/errors/errors"
 import { Button } from "~/components/common/ui/button"
 import { Input } from "~/components/common/ui/input"

@@ -5,7 +5,7 @@
 Learn more about [Remix Stacks](https://remix.run/stacks).
 
 ```sh
-npx create-remix@latest --template remix-run/glanum-stack
+npx create-remix@latest --template Agence-Glanum/glanum-stack
 ```
 
 ## What's in the stack

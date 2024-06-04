@@ -12,11 +12,11 @@
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "setup": "",
     "start": "remix-serve ./build/server/index.js",
-    "start:mocks": "binode --require ./mocks -- @remix-run/serve:remix-serve ./build/server/index.js",
+    "start:mocks": "cross-env-shell PORT=8811 SESSION_SECRET=test binode --require ./mocks/index.cjs -- @remix-run/serve:remix-serve ./build/server/index.js",
     "test": "vitest",
     "test:e2e:dev": "concurrently \"npm run dev\" \"npx cypress open\"",
     "pretest:e2e:run": "npm run build",
-    "test:e2e:run": "cross-env PORT=8811 concurrently \" npm run start:mocks\" \"npx cypress run\"",
+    "test:e2e:run": "concurrently \" npm run start:mocks\" \"npx cypress run\"",
     "typecheck": "tsc && tsc -p cypress",
     "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run"
   },

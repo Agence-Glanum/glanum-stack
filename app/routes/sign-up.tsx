@@ -1,17 +1,9 @@
-import { getFormProps, getInputProps, useForm } from "@conform-to/react"
-import { parseWithZod } from "@conform-to/zod"
 import type { MetaFunction } from "@remix-run/node"
-import { Form, Link, useActionData, useSearchParams } from "@remix-run/react"
 import { useTranslation } from "react-i18next"
-import { AuthenticityTokenInput } from "remix-utils/csrf/react"
 
+import SignUpForm from "~/components/auth/sign-up/sign-up-form/sign-up-form"
 import DarkModePickerPopover from "~/components/common/dark-mode-picker/dark-mode-picker-popover/dark-mode-picker-popover"
-import Errors from "~/components/common/form/errors/errors"
-import { Button } from "~/components/common/ui/button"
-import { Input } from "~/components/common/ui/input"
-import { Label } from "~/components/common/ui/label"
 import { action, loader } from "~/domains/auth/controllers/sign-up.server"
-import { schema } from "~/domains/auth/schemas/sign-up"
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => [
   { title: data?.title },
@@ -20,18 +12,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => [
 export { loader, action }
 
 export default function SignUpPage() {
-  const lastResult = useActionData<typeof action>()
-  const [form, fields] = useForm({
-    lastResult,
-    shouldValidate: "onBlur",
-    onValidate({ formData }) {
-      return parseWithZod(formData, { schema })
-    },
-  })
-  const [searchParams] = useSearchParams()
   const { t } = useTranslation()
-
-  const redirectTo = searchParams.get("redirectTo") ?? undefined
 
   return (
     <div className="flex min-h-full flex-col justify-center">
@@ -42,68 +23,7 @@ export default function SignUpPage() {
         <h1 className="w-full text-center text-2xl font-bold">
           {t("Sign up")}
         </h1>
-        <Form method="post" className="space-y-6" {...getFormProps(form)}>
-          <AuthenticityTokenInput />
-
-          <input type="hidden" name="redirectTo" value={redirectTo} />
-
-          <div>
-            <Label htmlFor={fields.email.id}>{t("Email address")}</Label>
-            <div className="mt-1">
-              <Input
-                {...getInputProps(fields.email, { type: "email" })}
-                required
-              />
-              {fields.email.errors ? (
-                <div
-                  className="text-sm font-semibold text-destructive"
-                  id={fields.email.errorId}
-                >
-                  {fields.email.errors}
-                </div>
-              ) : null}
-            </div>
-          </div>
-          <div>
-            <Label htmlFor={fields.password.id}>{t("Password")}</Label>
-            <div className="mt-1">
-              <Input
-                {...getInputProps(fields.password, { type: "password" })}
-                required
-              />
-              {fields.password.errors ? (
-                <div
-                  className="text-sm font-semibold text-destructive"
-                  id={fields.password.errorId}
-                >
-                  {fields.password.errors}
-                </div>
-              ) : null}
-            </div>
-          </div>
-
-          {form.errors ? (
-            <Errors>{form.errors.map((error) => error)}</Errors>
-          ) : null}
-
-          <Button type="submit" className="w-full">
-            {t("Create Account")}
-          </Button>
-
-          <div className="w-full text-center text-sm text-gray-500">
-            {t("Already have an account?")}{" "}
-            <Button className="px-0" variant="link" asChild>
-              <Link
-                to={{
-                  pathname: "/sign-in",
-                  search: searchParams.toString(),
-                }}
-              >
-                {t("Sign in")}
-              </Link>
-            </Button>
-          </div>
-        </Form>
+        <SignUpForm />
       </div>
     </div>
   )

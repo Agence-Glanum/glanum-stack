@@ -1,35 +1,19 @@
 import { parseWithZod } from "@conform-to/zod"
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { json, redirect } from "@remix-run/node"
-import { makeDomainFunction } from "domain-functions"
 import { typedjson } from "remix-typedjson"
 
+import { register } from "~/domains/auth/actions/register.server"
 import { schema } from "~/domains/auth/schemas/sign-up"
 import {
   createUserSession,
   getUser,
 } from "~/domains/auth/services/session.server"
 import i18next from "~/i18next.server"
-import { safeRedirect } from "~/utils"
 import { validateCsrf } from "~/utils/csrf.server"
-import { propagateError } from "~/utils/domain-functions.server"
 import { getProperError } from "~/utils/error"
 
-import { createAccount } from "../repositories/auth.server"
 import { authenticator } from "../services/auth.server"
-
-const register = makeDomainFunction(schema)(async ({
-  password,
-  email,
-  redirectTo,
-}) => {
-  const result = propagateError(await createAccount({ password, email }))
-
-  return {
-    redirectTo: safeRedirect(redirectTo ?? "/"),
-    user: { ...result.data },
-  }
-})
 
 export async function action({ request }: ActionFunctionArgs) {
   await validateCsrf(request)

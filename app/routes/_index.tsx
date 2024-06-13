@@ -1,6 +1,6 @@
+import { Trans } from "@lingui/macro"
 import type { MetaFunction } from "@remix-run/node"
 import { Form, Link } from "@remix-run/react"
-import { useTranslation } from "react-i18next"
 import { AuthenticityTokenInput } from "remix-utils/csrf/react"
 
 import DarkModePicker from "~/components/common/dark-mode-picker/dark-mode-picker"
@@ -10,8 +10,6 @@ export const meta: MetaFunction = () => [{ title: "Glanum stack" }]
 
 export default function Index() {
   const user = useOptionalUser()
-
-  const { t } = useTranslation()
 
   return (
     <main className="relative min-h-screen sm:flex sm:items-center sm:justify-center">
@@ -53,13 +51,13 @@ export default function Index() {
                       to="/sign-up"
                       className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 shadow-sm hover:bg-yellow-50 sm:px-8"
                     >
-                      {t("Sign up")}
+                      <Trans>Sign up</Trans>
                     </Link>
                     <Link
                       to="/sign-in"
                       className="flex items-center justify-center rounded-md bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600"
                     >
-                      {t("Sign in")}
+                      <Trans>Sign in</Trans>
                     </Link>
                   </div>
                 )}
@@ -133,11 +131,18 @@ export default function Index() {
                 alt: "Domain functions",
                 href: "https://github.com/seasonedcc/domain-functions",
               },
+              {
+                src: "https://lingui.dev/img/logo-small.svg",
+                alt: "Lingui",
+                href: "https://lingui.dev",
+              },
             ].map((img) => (
               <a
                 key={img.href}
                 href={img.href}
                 className="flex h-16 w-32 justify-center p-1 grayscale transition hover:grayscale-0 focus:grayscale-0"
+                target="_blank"
+                rel="noreferrer"
               >
                 <img alt={img.alt} src={img.src} className="object-contain" />
               </a>

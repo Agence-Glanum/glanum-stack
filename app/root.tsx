@@ -1,4 +1,9 @@
-import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node"
+import { i18n } from "@lingui/core"
+import type {
+  ActionFunctionArgs,
+  LinksFunction,
+  LoaderFunctionArgs,
+} from "@remix-run/node"
 import { json } from "@remix-run/node"
 import {
   Links,
@@ -8,15 +13,14 @@ import {
   ScrollRestoration,
 } from "@remix-run/react"
 import { useEffect } from "react"
-import { useTranslation } from "react-i18next"
-import { useChangeLanguage } from "remix-i18next/react"
 import { typedjson, useTypedLoaderData } from "remix-typedjson"
 import { AuthenticityTokenProvider } from "remix-utils/csrf/react"
 
 import { getUser } from "~/domains/auth/services/session.server"
 import { useIsBot } from "~/hooks/use-is-bot"
 import { useTernaryDarkMode } from "~/hooks/use-ternary-dark-mode"
-import i18next from "~/i18next.server"
+import { loadCatalog, useLocale } from "~/modules/lingui/lingui"
+import { linguiServer, localeCookie } from "~/modules/lingui/lingui.server"
 import stylesheet from "~/tailwind.css?url"
 import { csrf } from "~/utils/csrf.server"
 
@@ -24,8 +28,19 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
 ]
 
+export async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData()
+
+  const locale = formData.get("locale") ?? "en"
+
+  return json(null, {
+    headers: {
+      "Set-Cookie": await localeCookie.serialize(locale),
+    },
+  })
+}
+
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const locale = await i18next.getLocale(request)
   const [token, cookieHeader] = await csrf.commitToken()
 
   if (!cookieHeader) {
@@ -33,6 +48,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   }
 
   const user = await getUser(request)
+
+  const locale = await linguiServer.getLocale(request)
 
   return typedjson(
     {
@@ -42,15 +59,20 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       csrf: token,
       env: process.env.APP_ENV,
     },
-    { headers: { "set-cookie": cookieHeader } },
+    {
+      headers: [
+        ["Set-Cookie", cookieHeader],
+        ["Set-Cookie", await localeCookie.serialize(locale)],
+      ],
+    },
   )
 }
 
-export default function App() {
-  const { locale, csrf } = useTypedLoaderData<typeof loader>()
+export type RootLoaderType = typeof loader
 
-  useChangeLanguage(locale)
-  const { i18n } = useTranslation()
+export default function App() {
+  const { csrf } = useTypedLoaderData<typeof loader>()
+
   const isBot = useIsBot()
   const { isDarkMode } = useTernaryDarkMode()
 
@@ -62,8 +84,16 @@ export default function App() {
     }
   }, [isDarkMode])
 
+  const locale = useLocale()
+
+  useEffect(() => {
+    if (i18n.locale !== locale) {
+      loadCatalog(locale)
+    }
+  }, [locale])
+
   return (
-    <html lang={locale} dir={i18n.dir()} className="h-full">
+    <html lang={locale ?? "en"} className="h-full">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />

@@ -1,8 +1,7 @@
+import { Trans } from "@lingui/macro"
 import { Eye, EyeOff } from "lucide-react"
-import PropTypes from "prop-types"
 import * as React from "react"
 import { useState } from "react"
-import { useTranslation } from "react-i18next"
 
 import { Button } from "~/components/common/ui/button"
 import { Input, InputProps } from "~/components/common/ui/input"
@@ -10,8 +9,6 @@ import { Input, InputProps } from "~/components/common/ui/input"
 const InputPassword = React.forwardRef<HTMLInputElement, InputProps>(
   ({ tabIndex, ...props }, ref) => {
     const [showPassword, setShowPassword] = useState(false)
-
-    const { t } = useTranslation()
 
     const handleClickShowPassword = () => {
       setShowPassword((prev) => !prev)
@@ -28,6 +25,7 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputProps>(
         <Button
           variant="ghost"
           size="icon"
+          type="button"
           tabIndex={tabIndex ? tabIndex + 1 : undefined}
           onClick={handleClickShowPassword}
           className="h-7 w-7 absolute right right-1 top-1/2 -translate-y-1/2 cursor-pointer"
@@ -35,12 +33,16 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputProps>(
           {showPassword ? (
             <>
               <EyeOff className="w-4 h-4" />
-              <span className="sr-only">{t("Hide password")}</span>
+              <span className="sr-only">
+                <Trans>Hide password</Trans>
+              </span>
             </>
           ) : (
             <>
               <Eye className="w-4 h-4" />
-              <span className="sr-only">{t("Show password")}</span>
+              <span className="sr-only">
+                <Trans>Show password</Trans>
+              </span>
             </>
           )}
         </Button>
@@ -48,11 +50,6 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputProps>(
     )
   },
 )
-
-InputPassword.propTypes = {
-  className: PropTypes.string,
-  tabIndex: PropTypes.number,
-}
 
 InputPassword.displayName = "InputPassword"
 

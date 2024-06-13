@@ -1,9 +1,8 @@
+import { t } from "@lingui/macro"
 import { ResultError } from "domain-functions"
 import { HTTPError } from "ky"
 
-import i18next from "~/i18next.server"
-
-export const getProperError = async (error: unknown, request: Request) => {
+export const getProperError = async (error: unknown) => {
   if (error instanceof ResultError) {
     return error.message
   }
@@ -16,8 +15,7 @@ export const getProperError = async (error: unknown, request: Request) => {
     return error[0].exception
   }
 
-  const t = await i18next.getFixedT(request)
-  return t("Unexpected error")
+  return t`Unexpected error`
 }
 
 export const getHttpError = async (
@@ -25,7 +23,6 @@ export const getHttpError = async (
   request: Request,
   defaultError: unknown = undefined,
 ) => {
-  console.log(error)
   if (error instanceof HTTPError) {
     if (error.response.status === 422) {
       const body = await error.response.json()
@@ -37,9 +34,7 @@ export const getHttpError = async (
 
       return errors
     }
-
-    const t = await i18next.getFixedT(request)
-    return Error(t("Unexpected error"))
+    return Error(t`Unexpected error`)
   }
 
   return defaultError ?? error

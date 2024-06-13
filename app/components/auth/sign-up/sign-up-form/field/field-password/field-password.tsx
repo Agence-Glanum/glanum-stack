@@ -1,5 +1,5 @@
 import { FieldName, useField, useInputControl } from "@conform-to/react"
-import { useTranslation } from "react-i18next"
+import { Trans } from "@lingui/macro"
 import { z } from "zod"
 
 import ErrorsField from "~/components/common/form/errors/errors-field/errors-field"
@@ -16,11 +16,11 @@ export default function FieldPassword({
   const [meta] = useField(name)
   const control = useInputControl(meta)
 
-  const { t } = useTranslation()
-
   return (
     <div>
-      <Label htmlFor={meta.id}>{t("Password")}</Label>
+      <Label htmlFor={meta.id}>
+        <Trans>Password</Trans>
+      </Label>
       <InputPassword
         {...getInputProps(meta, { type: "password", control })}
         required

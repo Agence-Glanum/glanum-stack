@@ -1,4 +1,5 @@
 import { parseWithZod } from "@conform-to/zod"
+import { i18n } from "@lingui/core"
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
 import { redirect } from "@remix-run/node"
 import { typedjson } from "remix-typedjson"
@@ -9,7 +10,6 @@ import {
   createUserSession,
   getUser,
 } from "~/domains/auth/services/session.server"
-import i18next from "~/i18next.server"
 import { validateCsrf } from "~/utils/csrf.server"
 import { getProperError } from "~/utils/error"
 
@@ -20,7 +20,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const formData = await request.clone().formData()
 
-  const submission = parseWithZod(formData, { schema })
+  const submission = parseWithZod(formData, { schema: schema(i18n) })
 
   if (submission.status !== "success") {
     return submission.reply()
@@ -32,7 +32,7 @@ export async function action({ request }: ActionFunctionArgs) {
     return typedjson(
       {
         ...submission.reply({
-          formErrors: [(await getProperError(result, request)).error],
+          formErrors: [(await getProperError(result)).error],
         }),
       },
       400,
@@ -51,11 +51,8 @@ export async function action({ request }: ActionFunctionArgs) {
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
   if (user) {
-    return redirect("/")
+    throw redirect("/")
   }
 
-  const t = await i18next.getFixedT(request)
-  const title = t("Sign in")
-
-  return typedjson({ title })
+  return typedjson({})
 }

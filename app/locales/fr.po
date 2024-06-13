@@ -1,0 +1,75 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2024-06-13 11:49+0200\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: fr\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#. js-lingui-explicit-id
+#: app/domains/auth/schemas/sign-in.ts:6
+#: app/domains/auth/schemas/sign-in.ts:7
+msgid "Required"
+msgstr "Requis"
+
+#: app/components/auth/sign-up/sign-up-form/sign-up-form.tsx:66
+msgid "Already have an account?"
+msgstr ""
+
+#: app/components/auth/sign-in/sign-in-form/sign-in-form.tsx:67
+msgid "Don't have an account?"
+msgstr ""
+
+#: app/components/auth/sign-in/sign-in-form/field/field-email/field-email.tsx:21
+#: app/components/auth/sign-up/sign-up-form/field/field-email/field-email.tsx:21
+msgid "Email address"
+msgstr ""
+
+#: app/modules/lingui/lingui.tsx:14
+msgid "English"
+msgstr ""
+
+#: app/modules/lingui/lingui.tsx:15
+msgid "French"
+msgstr ""
+
+#: app/components/common/form/input-password/input-password.tsx:36
+msgid "Hide password"
+msgstr ""
+
+#: app/components/auth/sign-in/sign-in-form/field/field-password/field-password.tsx:21
+#: app/components/auth/sign-up/sign-up-form/field/field-password/field-password.tsx:21
+msgid "Password"
+msgstr ""
+
+#: app/components/common/form/input-password/input-password.tsx:41
+msgid "Show password"
+msgstr ""
+
+#: app/components/auth/sign-in/sign-in-form/sign-in-form.tsx:62
+#: app/components/auth/sign-up/sign-up-form/sign-up-form.tsx:74
+#: app/routes/_index.tsx:60
+#: app/routes/sign-in.tsx:9
+#: app/routes/sign-in.tsx:23
+msgid "Sign in"
+msgstr "Connexion"
+
+#: app/components/auth/sign-in/sign-in-form/sign-in-form.tsx:75
+#: app/components/auth/sign-up/sign-up-form/sign-up-form.tsx:61
+#: app/routes/_index.tsx:54
+#: app/routes/sign-up.tsx:9
+#: app/routes/sign-up.tsx:23
+msgid "Sign up"
+msgstr ""
+
+#: app/utils/error.ts:18
+#: app/utils/error.ts:37
+msgid "Unexpected error"
+msgstr ""

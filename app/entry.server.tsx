@@ -4,22 +4,19 @@
  * For more information, see https://remix.run/docs/en/main/file-conventions/entry.server
  */
 
-import { resolve } from "node:path"
 import { PassThrough } from "node:stream"
 
+import { i18n } from "@lingui/core"
+import { I18nProvider } from "@lingui/react"
 import type { EntryContext } from "@remix-run/node"
 import { createReadableStreamFromReadable } from "@remix-run/node"
 import { RemixServer } from "@remix-run/react"
-import { createInstance } from "i18next"
-import Backend from "i18next-fs-backend"
 import { isbot } from "isbot"
 import { renderToPipeableStream } from "react-dom/server"
-import { I18nextProvider, initReactI18next } from "react-i18next"
 
 import { IsBotProvider } from "~/hooks/use-is-bot"
-
-import i18n from "./i18n"
-import i18next from "./i18next.server"
+import { loadCatalog } from "~/modules/lingui/lingui"
+import { linguiServer } from "~/modules/lingui/lingui.server"
 
 const ABORT_DELAY = 5_000
 
@@ -94,23 +91,12 @@ async function handleBrowserRequest(
   responseHeaders: Headers,
   remixContext: EntryContext,
 ) {
-  const instance = createInstance()
-  const lng = await i18next.getLocale(request)
-  const ns = i18next.getRouteNamespaces(remixContext)
-
-  await instance
-    .use(initReactI18next) // Tell our instance to use react-i18next
-    .use(Backend) // Setup our backend
-    .init({
-      ...i18n, // spread the configuration
-      lng, // The locale we detected above
-      ns, // The namespaces the routes about to render wants to use
-      backend: { loadPath: resolve("./public/locales/{{lng}}/{{ns}}.json") },
-    })
+  const locale = await linguiServer.getLocale(request)
+  await loadCatalog(locale)
 
   return new Promise((resolve, reject) => {
     const { pipe, abort } = renderToPipeableStream(
-      <I18nextProvider i18n={instance}>
+      <I18nProvider i18n={i18n}>
         <IsBotProvider isBot={false}>
           <RemixServer
             context={remixContext}
@@ -118,7 +104,7 @@ async function handleBrowserRequest(
             abortDelay={ABORT_DELAY}
           />
         </IsBotProvider>
-      </I18nextProvider>,
+      </I18nProvider>,
       {
         onShellReady() {
           const body = new PassThrough()

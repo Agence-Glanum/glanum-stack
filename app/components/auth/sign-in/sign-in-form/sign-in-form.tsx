@@ -1,5 +1,7 @@
 import { FormProvider, getFormProps, useForm } from "@conform-to/react"
 import { parseWithZod } from "@conform-to/zod"
+import { i18n } from "@lingui/core"
+import { Trans } from "@lingui/macro"
 import {
   Form,
   Link,
@@ -7,7 +9,6 @@ import {
   useNavigation,
   useSearchParams,
 } from "@remix-run/react"
-import { useTranslation } from "react-i18next"
 import { AuthenticityTokenInput } from "remix-utils/csrf/react"
 
 import FieldEmail from "~/components/auth/sign-in/sign-in-form/field/field-email/field-email"
@@ -32,11 +33,10 @@ export default function SignInForm() {
       redirectTo: searchParams.get("redirectTo") ?? undefined,
     },
     onValidate({ formData }) {
-      return parseWithZod(formData, { schema })
+      return parseWithZod(formData, { schema: schema(i18n) })
     },
   })
 
-  const { t } = useTranslation()
   const navigation = useNavigation()
 
   const isSubmitting =
@@ -59,12 +59,12 @@ export default function SignInForm() {
         ) : null}
 
         <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {t("Sign in")}
+          <Trans>Sign in</Trans>
           {isSubmitting ? "..." : ""}
         </Button>
 
         <div className="w-full text-center text-sm text-gray-500">
-          {t("Don't have an account?")}{" "}
+          <Trans>Don&apos;t have an account?</Trans>{" "}
           <Button className="px-0" variant="link" asChild>
             <Link
               to={{
@@ -72,7 +72,7 @@ export default function SignInForm() {
                 search: searchParams.toString(),
               }}
             >
-              {t("Sign up")}
+              <Trans>Sign up</Trans>
             </Link>
           </Button>
         </div>

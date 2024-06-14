@@ -1,8 +1,7 @@
 import { Authenticator } from "remix-auth"
 
-import { propagateError } from "~/utils/domain-functions.server"
+import { attempt } from "~/domains/auth/data/auth.server"
 
-import { attempt } from "../repositories/auth.server"
 import { ApiProxyStrategy } from "../strategies/api-proxy-strategy.server"
 import { User } from "../types/user"
 
@@ -11,15 +10,11 @@ import { sessionStorage } from "./init.server"
 export const authenticator = new Authenticator<User>(sessionStorage)
 
 authenticator.use(
-  new ApiProxyStrategy(async ({ form, context }) => {
-    const email = form.get("email")
-    const password = form.get("password")
+  new ApiProxyStrategy(async ({ form }) => {
+    const email = (form.get("email") as string) ?? ""
+    const password = (form.get("password") as string) ?? ""
 
-    const result = propagateError(
-      await attempt({ password, email }, { request: context?.request }),
-    )
-
-    return result.data
+    return await attempt({ password, email })
   }),
   "api-proxy",
 )

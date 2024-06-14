@@ -1,20 +1,21 @@
-import { i18n } from "@lingui/core"
-import { makeDomainFunction } from "domain-functions"
-
-import { createAccount } from "~/domains/auth/repositories/auth.server"
-import { schema } from "~/domains/auth/schemas/sign-up"
+import { createAccount } from "~/domains/auth/data/auth.server"
 import { safeRedirect } from "~/utils"
-import { propagateError } from "~/utils/domain-functions.server"
 
-export const register = makeDomainFunction(schema(i18n))(async ({
+interface RegisterParams {
+  email: string
+  password: string
+  redirectTo?: string | undefined
+}
+
+export async function register({
   password,
   email,
-  redirectTo,
-}) => {
-  const result = propagateError(await createAccount({ password, email }))
+  redirectTo = undefined,
+}: RegisterParams) {
+  const user = await createAccount({ password, email })
 
   return {
+    user,
     redirectTo: safeRedirect(redirectTo ?? "/"),
-    user: { ...result.data },
   }
-})
+}

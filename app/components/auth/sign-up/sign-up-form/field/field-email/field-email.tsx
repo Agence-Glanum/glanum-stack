@@ -5,7 +5,7 @@ import { z } from "zod"
 import ErrorsField from "~/components/common/form/errors/errors-field/errors-field"
 import { Input } from "~/components/common/ui/input"
 import { Label } from "~/components/common/ui/label"
-import { schema } from "~/domains/auth/schemas/sign-in"
+import { schema } from "~/domains/auth/validations/sign-in"
 import { getInputProps } from "~/utils/form"
 
 export default function FieldEmail({

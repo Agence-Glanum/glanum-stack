@@ -1,21 +1,28 @@
+import { Submission } from "@conform-to/dom"
 import { t } from "@lingui/macro"
-import { ResultError } from "domain-functions"
 import { HTTPError } from "ky"
 
-export const getProperError = async (error: unknown) => {
-  if (error instanceof ResultError) {
-    return error.message
-  }
+interface ErrorContext {
+  submission?: Submission<unknown>
+}
 
-  if (Array.isArray(error)) {
-    if (error[0].exception instanceof Error) {
-      return error[0].message
+export function getProperErrorResponse(
+  error: unknown,
+  { submission }: ErrorContext,
+) {
+  console.log(error)
+
+  if (error instanceof Error) {
+    if (submission) {
+      return submission.reply({
+        formErrors: [error.message],
+      })
     }
 
-    return error[0].exception
+    return { error: error.message }
   }
 
-  return t`Unexpected error`
+  return { error: t`Unexpected error` }
 }
 
 export const getHttpError = async (

@@ -127,11 +127,6 @@ export default function Index() {
                 href: "https://conform.guide/",
               },
               {
-                src: "https://avatars.githubusercontent.com/u/33913103",
-                alt: "Domain functions",
-                href: "https://github.com/seasonedcc/domain-functions",
-              },
-              {
                 src: "https://lingui.dev/img/logo-small.svg",
                 alt: "Lingui",
                 href: "https://lingui.dev",

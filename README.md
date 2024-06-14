@@ -1,4 +1,4 @@
-# Remix Indie Stack
+# Remix Glanum Stack
 
 ![The Remix Glanum Stack](https://repository-images.githubusercontent.com/465928257/a241fa49-bd4d-485a-a2a5-5cb8e4ee0abf)
 
@@ -19,8 +19,9 @@ npx create-remix@latest --template Agence-Glanum/glanum-stack
 - Code formatting with [Prettier](https://prettier.io)
 - Linting with [ESLint](https://eslint.org)
 - Static Types with [TypeScript](https://typescriptlang.org)
-- Forms handled by [Remix forms](https://remix-forms.seasoned.cc)
-- Features by [domains](https://github.com/seasonedcc/domain-functions)
+- Forms by [Conform](https://conform.guide/)
+- Translations by [Lingui](https://lingui.dev/)
+- Features by domains
 
 ## Development
 

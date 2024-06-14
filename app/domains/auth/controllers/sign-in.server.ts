@@ -5,13 +5,13 @@ import { redirect } from "@remix-run/node"
 import { typedjson } from "remix-typedjson"
 
 import { login } from "~/domains/auth/actions/login.server"
-import { schema } from "~/domains/auth/schemas/sign-in"
 import {
   createUserSession,
   getUser,
 } from "~/domains/auth/services/session.server"
+import { schema } from "~/domains/auth/validations/sign-in"
 import { validateCsrf } from "~/utils/csrf.server"
-import { getProperError } from "~/utils/error"
+import { getProperErrorResponse } from "~/utils/error"
 
 import { authenticator } from "../services/auth.server"
 
@@ -26,26 +26,22 @@ export async function action({ request }: ActionFunctionArgs) {
     return submission.reply()
   }
 
-  const result = await login({ ...submission.payload }, { request })
-
-  if (!result.success) {
-    return typedjson(
-      {
-        ...submission.reply({
-          formErrors: [(await getProperError(result)).error],
-        }),
-      },
-      400,
+  try {
+    const { redirectTo, user } = await login(
+      { ...submission.value },
+      { request },
     )
-  }
 
-  return createUserSession({
-    defaultRedirectTo: result.data.redirectTo,
-    remember: true,
-    sessionKey: authenticator.sessionKey,
-    request,
-    user: result.data.user,
-  })
+    return createUserSession({
+      user,
+      request,
+      remember: true,
+      defaultRedirectTo: redirectTo,
+      sessionKey: authenticator.sessionKey,
+    })
+  } catch (error) {
+    return typedjson(getProperErrorResponse(error, { submission }), 400)
+  }
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {

@@ -14,62 +14,78 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. js-lingui-explicit-id
-#: app/domains/auth/schemas/sign-in.ts:6
-#: app/domains/auth/schemas/sign-in.ts:7
+#: app/domains/auth/validations/sign-in.ts:10
+#: app/domains/auth/validations/sign-up.ts:10
+msgid "Invalid email format"
+msgstr "Le format de l'email est invalide"
+
+#. js-lingui-explicit-id
+#: app/domains/auth/validations/sign-in.ts:6
+#: app/domains/auth/validations/sign-in.ts:8
+#: app/domains/auth/validations/sign-up.ts:6
+#: app/domains/auth/validations/sign-up.ts:8
 msgid "Required"
 msgstr "Requis"
 
-#: app/components/auth/sign-up/sign-up-form/sign-up-form.tsx:66
+#: app/components/auth/sign-up/sign-up-form/sign-up-form.tsx:67
 msgid "Already have an account?"
-msgstr ""
+msgstr "Vous avez déjà un compte?"
 
 #: app/components/auth/sign-in/sign-in-form/sign-in-form.tsx:67
 msgid "Don't have an account?"
-msgstr ""
+msgstr "Vous n'avez pas de compte?"
 
-#: app/components/auth/sign-in/sign-in-form/field/field-email/field-email.tsx:21
-#: app/components/auth/sign-up/sign-up-form/field/field-email/field-email.tsx:21
+#: app/components/auth/sign-in/sign-in-form/field/field-email/field-email.tsx:22
+#: app/components/auth/sign-up/sign-up-form/field/field-email/field-email.tsx:22
 msgid "Email address"
-msgstr ""
+msgstr "Adresse email"
 
-#: app/modules/lingui/lingui.tsx:14
+#: app/domains/auth/data/auth.server.ts:19
+msgid "Email or password are incorrect"
+msgstr "Email ou mot de passe incorrect"
+
+#: app/modules/lingui/lingui.tsx:21
 msgid "English"
-msgstr ""
+msgstr "Anglais"
 
-#: app/modules/lingui/lingui.tsx:15
+#: app/modules/lingui/lingui.tsx:22
 msgid "French"
-msgstr ""
+msgstr "Français"
 
-#: app/components/common/form/input-password/input-password.tsx:36
+#: app/components/common/form/input-password/input-password.tsx:37
 msgid "Hide password"
-msgstr ""
+msgstr "Cacher le mot de passe"
 
-#: app/components/auth/sign-in/sign-in-form/field/field-password/field-password.tsx:21
-#: app/components/auth/sign-up/sign-up-form/field/field-password/field-password.tsx:21
+#: app/components/auth/sign-in/sign-in-form/field/field-password/field-password.tsx:22
+#: app/components/auth/sign-up/sign-up-form/field/field-password/field-password.tsx:22
 msgid "Password"
-msgstr ""
+msgstr "Mot de passe"
 
-#: app/components/common/form/input-password/input-password.tsx:41
+#: app/components/common/form/input-password/input-password.tsx:44
 msgid "Show password"
-msgstr ""
+msgstr "Afficher le mot de passe"
 
 #: app/components/auth/sign-in/sign-in-form/sign-in-form.tsx:62
-#: app/components/auth/sign-up/sign-up-form/sign-up-form.tsx:74
+#: app/components/auth/sign-up/sign-up-form/sign-up-form.tsx:75
 #: app/routes/_index.tsx:60
 #: app/routes/sign-in.tsx:9
-#: app/routes/sign-in.tsx:23
+#: app/routes/sign-in.tsx:22
 msgid "Sign in"
 msgstr "Connexion"
 
 #: app/components/auth/sign-in/sign-in-form/sign-in-form.tsx:75
-#: app/components/auth/sign-up/sign-up-form/sign-up-form.tsx:61
+#: app/components/auth/sign-up/sign-up-form/sign-up-form.tsx:62
 #: app/routes/_index.tsx:54
 #: app/routes/sign-up.tsx:9
-#: app/routes/sign-up.tsx:23
+#: app/routes/sign-up.tsx:22
 msgid "Sign up"
-msgstr ""
+msgstr "Inscription"
 
-#: app/utils/error.ts:18
-#: app/utils/error.ts:37
+#: app/domains/auth/data/auth.server.ts:34
+msgid "The account could not be created"
+msgstr "Le compte n'a pas pu être créé"
+
+#: app/utils/error.ts:23
+#: app/utils/error.ts:42
 msgid "Unexpected error"
-msgstr ""
+msgstr "Une erreur est survenue"

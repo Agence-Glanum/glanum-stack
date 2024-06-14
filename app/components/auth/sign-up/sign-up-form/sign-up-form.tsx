@@ -15,7 +15,7 @@ import FieldEmail from "~/components/auth/sign-up/sign-up-form/field/field-email
 import FieldPassword from "~/components/auth/sign-up/sign-up-form/field/field-password/field-password"
 import Errors from "~/components/common/form/errors/errors"
 import { Button } from "~/components/common/ui/button"
-import { schema } from "~/domains/auth/schemas/sign-up"
+import { schema } from "~/domains/auth/validations/sign-up"
 import { action } from "~/routes/sign-up"
 import { getInputProps } from "~/utils/form"
 

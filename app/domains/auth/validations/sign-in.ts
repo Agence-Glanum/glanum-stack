@@ -7,7 +7,7 @@ export const schema = (i18n: I18n) => {
     email: z
       .string({ required_error: i18n._(`Required`) })
       .min(1)
-      .email(),
+      .email({ message: i18n._(`Invalid email format`) }),
     redirectTo: z.string().optional(),
   })
 }

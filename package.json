@@ -113,7 +113,6 @@
     "typescript": "^5.4.5",
     "vite": "^5.2.12",
     "vite-plugin-babel-macros": "^1.0.6",
-    "vite-plugin-cjs-interop": "^2.1.0",
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^1.6.0"
   },

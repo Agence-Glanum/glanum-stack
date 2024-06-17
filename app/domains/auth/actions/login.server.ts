@@ -1,5 +1,6 @@
+import { safeRedirect } from "remix-utils/safe-redirect"
+
 import { authenticator } from "~/domains/auth/services/auth.server"
-import { safeRedirect } from "~/utils"
 
 interface LoginParams {
   email: string

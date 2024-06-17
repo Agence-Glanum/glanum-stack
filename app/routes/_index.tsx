@@ -4,7 +4,7 @@ import { Form, Link } from "@remix-run/react"
 import { AuthenticityTokenInput } from "remix-utils/csrf/react"
 
 import DarkModePicker from "~/components/common/dark-mode-picker/dark-mode-picker"
-import { useOptionalUser } from "~/utils"
+import { useOptionalUser } from "~/utils/user"
 
 export const meta: MetaFunction = () => [{ title: "Glanum stack" }]
 

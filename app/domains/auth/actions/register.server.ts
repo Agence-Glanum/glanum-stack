@@ -1,5 +1,6 @@
+import { safeRedirect } from "remix-utils/safe-redirect"
+
 import { createAccount } from "~/domains/auth/data/auth.server"
-import { safeRedirect } from "~/utils"
 
 interface RegisterParams {
   email: string

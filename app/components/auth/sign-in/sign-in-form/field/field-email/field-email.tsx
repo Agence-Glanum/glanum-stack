@@ -11,7 +11,7 @@ import { getInputProps } from "~/utils/form"
 export default function FieldEmail({
   name,
 }: {
-  name: FieldName<string | null, z.infer<typeof schema>>
+  name: FieldName<string | null, z.infer<ReturnType<typeof schema>>>
 }) {
   const [meta] = useField(name)
   const control = useInputControl(meta)

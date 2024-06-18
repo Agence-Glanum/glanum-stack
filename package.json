@@ -11,6 +11,7 @@
     "format:repo": "npm run format && npm run lint -- --fix",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "lingui:extract": "lingui extract --clean",
+    "setup": "",
     "start": "remix-serve ./build/server/index.js",
     "start:mocks": "cross-env-shell PORT=8811 SESSION_SECRET=test binode --require ./mocks/index.cjs -- @remix-run/serve:remix-serve ./build/server/index.js",
     "test": "vitest",
